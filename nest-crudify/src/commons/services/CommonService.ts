@@ -1,9 +1,18 @@
 import {CommonDto} from './CommonDto';
-import {SearchParams} from './CommonFilters';
+import {Page, SearchParams} from './CommonFilters';
 
-export type SearcResponse<Id, Dto> = {
-  data: Dto[],
+
+
+export class SearcResponse<Id, Dto> {
+  data: Dto[]
   total: number
+  page?: Page
+
+  constructor(data: Dto[], total: number, page?: Page) {
+    this.data = data
+    this.total = total
+    this.page = page
+  }
 }
 
 export interface CommonService<Id, DTO extends CommonDto<Id>>{

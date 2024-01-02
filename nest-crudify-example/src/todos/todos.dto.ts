@@ -15,7 +15,7 @@ export class TodoDto extends MongoDto{
   createdAt?: number
   updateAt?: number
 
-  constructor({id, name, description, createdAt, updateAt}: TodoProperties) {
+  constructor({id, name, description, createdAt, updateAt}: TodoProperties | undefined) {
     super("todo");
     this.id = id
     this.name = name;

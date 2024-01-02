@@ -33,13 +33,13 @@ export abstract class SearchFilters{
 }
 
 export type Page = {
-  offset: number;
-  limit: number;
+  number: number;
+  size: number;
 };
 
 export type SearchParams = {
   page?: Page;
   sort?: string;
   search?: string;
-  filters?: SearchFilters;
+  filter?: SearchFilters;
 };

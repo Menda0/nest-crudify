@@ -1,7 +1,7 @@
 import {Model, Types} from 'mongoose';
 import {MongoAggsBuilder} from './MongoAggsBuilder';
 import {MongoDto, MongoDtoFactory} from './MongoDto';
-import {SearchParams, CommonService, EntityNotFoundException} from '../../commons';
+import {SearchParams, CommonService, EntityNotFoundException, SearcResponse} from '../../commons';
 
 export class MongoService<Entity, Dto extends MongoDto, Filters> implements CommonService<string, Dto>
 {
@@ -27,7 +27,7 @@ export class MongoService<Entity, Dto extends MongoDto, Filters> implements Comm
   async search(params?: SearchParams){
     const operation = new MongoAggsBuilder()
 
-    const filters = params?.filters?.getIterator()
+    const filters = params?.filter?.getIterator()
 
     while(filters?.hasNext()){
       const filter = filters?.next()
@@ -42,10 +42,13 @@ export class MongoService<Entity, Dto extends MongoDto, Filters> implements Comm
 
     if (
       params?.page &&
-      params.page.limit != undefined &&
-      params.page.offset != undefined
+      params.page.number != undefined &&
+      params.page.size != undefined
     ) {
-      const { offset, limit } = params.page;
+      const {number, size} = params.page
+      const limit = size
+      const offset = (number-1) * limit
+
       operation.withOffset(offset).withLimit(limit);
     }
 
@@ -57,10 +60,11 @@ export class MongoService<Entity, Dto extends MongoDto, Filters> implements Comm
 
     const data = result.map(e => this.factory.create(e))
 
-    return {
+    return new SearcResponse(
       data,
-      total
-    }
+      total,
+      params?.page
+    )
   }
 
   async get(id: string) {
