@@ -20,5 +20,5 @@ export interface CommonService<Id, DTO extends CommonDto<Id>>{
   create(data: any): Promise<DTO>
   get(id: string): Promise<DTO>
   delete(id: string): Promise<DTO>
-  update(id: string, data: any): Promise<DTO>
+  update(id: Id, data: any): Promise<DTO>
 }

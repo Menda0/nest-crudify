@@ -1,4 +1,4 @@
-import {Body, Controller, Get, Post, UseInterceptors, Query} from '@nestjs/common';
+import {Body, Controller, Get, Post, UseInterceptors, Query, Delete, Param, Put} from '@nestjs/common';
 import {
   CommonCrudController, FilterLike, FilterMatch, FilterMatchIn,
   JsonApiDeserializerPipe,
@@ -10,7 +10,7 @@ import {
 } from 'nest-crudify';
 import {TodosService} from './todos.service';
 import {TodoDto} from './todos.dto';
-import {ObjectId, Types} from 'mongoose';
+import {Types} from 'mongoose';
 
 class TodoFilters extends SearchFilters{
   @TransformToFilter<Types.ObjectId[]>(new FilterMatchIn("_id"), (v) => parseValues(v, parseObjectId))
@@ -34,6 +34,11 @@ export class TodosController extends MongoController<TodoDto, TodosService> impl
     return this._create(body)
   }
 
+  @Put(":id")
+  update(@Param('id') id: string,@Body(new JsonApiDeserializerPipe()) body: any ): Promise<any> {
+    return this._update(id, body)
+  }
+
   @Get()
   search(
     @Query('sort') sort?: string,
@@ -42,5 +47,10 @@ export class TodosController extends MongoController<TodoDto, TodosService> impl
     @Query('filter') filter?: TodoFilters,
   ){
     return this._search(sort, search, page, filter)
+  }
+
+  @Delete(":id")
+  delele(@Param('id') id: string){
+    return this._delete(id)
   }
 }

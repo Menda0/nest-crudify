@@ -10,6 +10,10 @@ export class CommonController<Id, Dto extends CommonDto<Id>,Service extends Comm
     return this.service.create(body);
   }
 
+  async _update(id: Id, body: Dto){
+    return this.service.update(id, body)
+  }
+
   async _search(
     sort?: string,
     search?: string,
@@ -25,6 +29,10 @@ export class CommonController<Id, Dto extends CommonDto<Id>,Service extends Comm
     }
 
     return this.service.search(params)
+  }
+
+  _delete(id:string){
+    return this.service.delete(id)
   }
 }
 
