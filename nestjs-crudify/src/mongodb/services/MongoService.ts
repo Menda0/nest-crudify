@@ -3,7 +3,7 @@ import {MongoAggsBuilder} from './MongoAggsBuilder';
 import {MongoDto, MongoDtoFactory} from './MongoDto';
 import {SearchParams, CommonService, EntityNotFoundException, SearcResponse} from '../../commons';
 
-export class MongoService<Entity, Dto extends MongoDto, Filters> implements CommonService<string, Dto>
+export class MongoService<Entity, Dto extends MongoDto> implements CommonService<string, Dto>
 {
   constructor(
     protected readonly repository: Model<Entity>,

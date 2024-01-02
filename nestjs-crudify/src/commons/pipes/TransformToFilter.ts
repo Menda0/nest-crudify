@@ -1,5 +1,5 @@
 import {Transform} from 'class-transformer';
-import {CommonFilter} from 'nest-crudify';
+import {CommonFilter} from 'nestjs-crudify';
 
 export function parseValues<T>(values: string, parser: (v: any) => T) {
   return values.split(",").map(e => parser(e))

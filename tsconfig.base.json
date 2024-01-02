@@ -15,7 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "nest-crudify": ["nestjs-crudify/src/index.ts"]
+      "nestjs-crudify": ["nestjs-crudify/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

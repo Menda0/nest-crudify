@@ -1,5 +1,4 @@
-import {CommonDto, CommonService, Page, SearchFilters, SearchParams} from 'nest-crudify';
-import {Query} from '@nestjs/common';
+import {CommonDto, CommonService, Page, SearchFilters, SearchParams} from '../services';
 
 export class CommonController<Id, Dto extends CommonDto<Id>,Service extends CommonService<Id, Dto>>{
   constructor(
