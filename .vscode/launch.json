@@ -1,0 +1,18 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch nest-crudify-example",
+            "request": "launch",
+            "type": "node",
+            "runtimeExecutable": "npx",
+            "runtimeArgs": [
+                "nx",
+                "serve",
+                "my-nest-project"
+            ],
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/app/nest-crudify-example"
+        }
+    ]
+}
