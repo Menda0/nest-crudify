@@ -1,7 +1,19 @@
+import {TransformToNumber} from '../pipes';
 
 export interface Filter<Input, Result> {
   name: string
   getFilter(): Result
+}
+
+export abstract class CommonFilter<Input, Result>  implements Filter<Input, Result>{
+  value?: Input
+  name: string;
+
+  constructor(name: string) {
+    this.name = name;
+  }
+
+  abstract getFilter(): Result
 }
 
 export class SearchFiltersIterator {
@@ -32,9 +44,11 @@ export abstract class SearchFilters{
   }
 }
 
-export type Page = {
-  number: number;
-  size: number;
+export class Page {
+  @TransformToNumber()
+  number!: number;
+  @TransformToNumber()
+  size!: number;
 };
 
 export type SearchParams = {
