@@ -1,6 +1,6 @@
 {
   "name": "nestjs-crudify",
-  "version": "1.0.5",
+  "version": "1.0.0",
   "license": "MIT",
   "repository": "https://github.com/Menda0/nest-crudify",
   "author": "Marco Mendao",

@@ -1,13 +1,13 @@
 {
   "name": "nestjs-crudify",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "license": "MIT",
   "repository": "https://github.com/Menda0/nest-crudify",
   "author": "Marco Mendao",
   "main": "main.js",
   "scripts": {
     "todos": "nx serve nestjs-crudify-example --configuration=development",
-    "build": "nx build nestjs-crudify"
+    "build": "nx build nestjs-crudify && cp nestjs-crudify/package.json dist/nestjs-crudify/package.json"
   },
   "private": false,
   "dependencies": {
