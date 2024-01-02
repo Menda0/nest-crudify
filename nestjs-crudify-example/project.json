@@ -1,7 +1,7 @@
 {
-  "name": "nest-crudify-example",
+  "name": "nestjs-crudify-example",
   "$schema": "../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "nest-crudify-example/src",
+  "sourceRoot": "nestjs-crudify-example/src",
   "projectType": "application",
   "targets": {
     "build": {
@@ -11,11 +11,11 @@
       "options": {
         "target": "node",
         "compiler": "tsc",
-        "outputPath": "dist/nest-crudify-example",
-        "main": "nest-crudify-example/src/main.ts",
-        "tsConfig": "nest-crudify-example/tsconfig.app.json",
-        "assets": ["nest-crudify-example/src/assets"],
-        "webpackConfig": "nest-crudify-example/webpack.config.js"
+        "outputPath": "dist/nestjs-crudify-example",
+        "main": "nestjs-crudify-example/src/main.ts",
+        "tsConfig": "nestjs-crudify-example/tsconfig.app.json",
+        "assets": ["nestjs-crudify-example/src/assets"],
+        "webpackConfig": "nestjs-crudify-example/webpack.config.js"
       },
       "configurations": {
         "development": {},
@@ -26,14 +26,14 @@
       "executor": "@nx/js:node",
       "defaultConfiguration": "development",
       "options": {
-        "buildTarget": "nest-crudify-example:build"
+        "buildTarget": "nestjs-crudify-example:build"
       },
       "configurations": {
         "development": {
-          "buildTarget": "nest-crudify-example:build:development"
+          "buildTarget": "nestjs-crudify-example:build:development"
         },
         "production": {
-          "buildTarget": "nest-crudify-example:build:production"
+          "buildTarget": "nestjs-crudify-example:build:production"
         }
       }
     },
@@ -45,7 +45,7 @@
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "nest-crudify-example/jest.config.ts"
+        "jestConfig": "nestjs-crudify-example/jest.config.ts"
       }
     }
   },

@@ -1,0 +1,37 @@
+{
+  "name": "nestjs-crudify",
+  "$schema": "../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "nestjs-crudify/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nx/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "target": "node",
+        "compiler": "tsc",
+        "outputPath": "dist/nestjs-crudify",
+        "main": "nestjs-crudify/src/index.ts",
+        "tsConfig": "nestjs-crudify/tsconfig.json",
+        "webpackConfig": "nestjs-crudify/webpack.config.js"
+      },
+      "configurations": {
+        "development": {},
+        "production": {}
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "nestjs-crudify/jest.config.ts"
+      }
+    }
+  },
+  "tags": []
+}

@@ -11,7 +11,8 @@ describe('Testing MongoAggsBuilder', () => {
   });
 
   it('should be able to add a match filter"', () => {
-    const matchFilter = new FilterMatch<string>("filter1","this is a test");
+    const matchFilter = new FilterMatch<string>("filter1");
+    matchFilter.value = "this is a test"
     builder.withFilter(matchFilter)
 
     const query = builder.build()
@@ -27,7 +28,8 @@ describe('Testing MongoAggsBuilder', () => {
   });
 
   it('should be able to add a match in filter"', () => {
-    const matchFilter = new FilterMatchIn<string>("filter1", ["this is a test"]);
+    const matchFilter = new FilterMatchIn<string[]>("filter1");
+    matchFilter.value = ["this is a test"]
     builder.withFilter(matchFilter)
 
     const query = builder.build()
@@ -43,7 +45,8 @@ describe('Testing MongoAggsBuilder', () => {
   });
 
   it('should be able to add a match like', () => {
-    const matchFilter = new FilterLike("filter1","this is a test");
+    const matchFilter = new FilterLike("filter1");
+    matchFilter.value = "this is a test"
     builder.withFilter(matchFilter)
 
     const query = builder.build()
@@ -62,13 +65,15 @@ describe('Testing MongoAggsBuilder', () => {
     const builder = new MongoAggsBuilder()
 
     class CustomSearchFilters extends SearchFilters{
-      constructor(private name: FilterLike,private age: FilterMatch<number>) {
+      constructor(private name: FilterLike, private age: FilterMatch<number>) {
         super()
       }
     }
 
-    const nameFilter = new FilterLike("name","this is a test");
-    const ageFilter = new FilterMatch("age",23);
+    const nameFilter = new FilterLike("name");
+    nameFilter.value = "this is a test"
+    const ageFilter = new FilterMatch<number>("age");
+    ageFilter.value = 23
     const searchFilters = new CustomSearchFilters(nameFilter, ageFilter)
 
 

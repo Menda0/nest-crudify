@@ -7,7 +7,7 @@ import {
   Page, parseObjectId, parseValues,
   SearchFilters,
   TransformToFilter,
-} from 'nest-crudify';
+} from 'nestjs-crudify';
 import {TodosService} from './todos.service';
 import {TodoDto} from './todos.dto';
 import {Types} from 'mongoose';

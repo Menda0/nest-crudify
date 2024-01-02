@@ -1,5 +1,5 @@
 import {TodosService} from './todos.service';
-import {TestingModuleBuilder} from 'nest-crudify';
+import {TestingModuleBuilder} from 'nestjs-crudify';
 import {TodosModule} from './todos.module';
 import {TodoDto} from './todos.dto';
 import mongoose from "mongoose"

@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TodosController } from './todos.controller';
-import {TestingModuleBuilder} from 'nest-crudify';
+import {TestingModuleBuilder} from 'nestjs-crudify';
 import {TodosModule} from './todos.module';
 
 describe('TodosController', () => {
