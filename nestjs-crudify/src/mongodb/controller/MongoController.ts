@@ -1,4 +1,7 @@
-import {MongoDto, MongoService} from '../services';
-import {CommonController} from '../../commons';
+import { CommonController } from '../../commons';
+import { MongoDto, MongoService } from '../services';
 
-export class MongoController<Dto extends MongoDto, Service extends MongoService<any, Dto, any>> extends CommonController<string, Dto, Service>{}
+export class MongoController<
+  Dto extends MongoDto,
+  Service extends MongoService<any, Dto>
+> extends CommonController<string, Dto, Service> {}

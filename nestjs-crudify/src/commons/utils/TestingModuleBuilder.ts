@@ -1,9 +1,9 @@
-import { Test } from '@nestjs/testing';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
+import { Test } from '@nestjs/testing';
+import { TestingModule } from '@nestjs/testing/testing-module';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
-import { TestingModule } from '@nestjs/testing/testing-module';
 
 export class TestingModuleBuilder {
   private imports: Array<any> = [];
@@ -29,7 +29,7 @@ export class TestingModuleBuilder {
   }
 
   withMongoInMemory() {
-    this.mongoModule = true
+    this.mongoModule = true;
     return this;
   }
 
@@ -48,7 +48,7 @@ export class TestingModuleBuilder {
       this.mongoServer = await MongoMemoryServer.create();
       await mongoose.connect(this.mongoServer.getUri());
 
-      this.mongoModule = MongooseModule.forRoot(this.mongoServer.getUri())
+      this.mongoModule = MongooseModule.forRoot(this.mongoServer.getUri());
 
       this.imports.push(this.mongoModule);
     }

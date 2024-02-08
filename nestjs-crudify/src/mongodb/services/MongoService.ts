@@ -1,9 +1,15 @@
-import {Model, Types} from 'mongoose';
-import {MongoAggsBuilder} from './MongoAggsBuilder';
-import {MongoDto, MongoDtoFactory} from './MongoDto';
-import {SearchParams, CommonService, EntityNotFoundException, SearcResponse} from '../../commons';
+import { Model, Types } from 'mongoose';
+import {
+  CommonService,
+  EntityNotFoundException,
+  SearchParams,
+  SearchResponse,
+} from '../../commons';
+import { MongoAggsBuilder } from './MongoAggsBuilder';
+import { MongoDto, MongoDtoFactory } from './MongoDto';
 
-export class MongoService<Entity, Dto extends MongoDto> implements CommonService<string, Dto>
+export class MongoService<Entity, Dto extends MongoDto>
+  implements CommonService<string, Dto>
 {
   constructor(
     protected readonly repository: Model<Entity>,
@@ -24,14 +30,14 @@ export class MongoService<Entity, Dto extends MongoDto> implements CommonService
     return this.factory.create(entity);
   }
 
-  async search(params?: SearchParams){
-    const operation = new MongoAggsBuilder()
+  async search(params?: SearchParams) {
+    const operation = new MongoAggsBuilder();
 
-    const filters = params?.filter?.getIterator()
+    const filters = params?.filter?.getIterator();
 
-    while(filters?.hasNext()){
-      const filter = filters?.next()
-      operation.withFilter(filter)
+    while (filters?.hasNext()) {
+      const filter = filters?.next();
+      operation.withFilter(filter);
     }
 
     const countOperation = this.count(operation.build());
@@ -45,9 +51,9 @@ export class MongoService<Entity, Dto extends MongoDto> implements CommonService
       params.page.number != undefined &&
       params.page.size != undefined
     ) {
-      const {number, size} = params.page
-      const limit = size
-      const offset = (number-1) * limit
+      const { number, size } = params.page;
+      const limit = size;
+      const offset = (number - 1) * limit;
 
       operation.withOffset(offset).withLimit(limit);
     }
@@ -56,32 +62,32 @@ export class MongoService<Entity, Dto extends MongoDto> implements CommonService
       .aggregate<Entity>(operation.build())
       .exec();
 
-    const [total, result] = await Promise.all([countOperation, searchOpearation])
+    const [total, result] = await Promise.all([
+      countOperation,
+      searchOpearation,
+    ]);
 
-    const data = result.map(e => this.factory.create(e))
+    const data = result.map((e) => this.factory.create(e));
 
-    return new SearcResponse(
-      data,
-      total,
-      params?.page
-    )
+    return new SearchResponse(data, total, params?.page);
   }
 
   async get(id: string) {
-    let query = this.repository.findById(new Types.ObjectId(id));
+    const query = this.repository.findById(new Types.ObjectId(id));
 
     const entity = await query.exec();
 
     if (entity) {
       return this.factory.create(entity);
     } else {
-      throw new EntityNotFoundException(this.repository.modelName, id)
+      throw new EntityNotFoundException(this.repository.modelName, id);
     }
   }
 
   async delete(id: string) {
     const entity = this.get(id);
-    const response = await this.repository
+
+    await this.repository
       .deleteOne({
         _id: new Types.ObjectId(id),
       })
@@ -97,7 +103,7 @@ export class MongoService<Entity, Dto extends MongoDto> implements CommonService
         .exec();
       return this.get(id);
     } else {
-      throw new EntityNotFoundException(this.repository.modelName, id)
+      throw new EntityNotFoundException(this.repository.modelName, id);
     }
   }
 }
