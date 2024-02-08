@@ -1,7 +1,7 @@
 import {Model, Types} from 'mongoose';
 import {MongoAggsBuilder} from './MongoAggsBuilder';
 import {MongoDto, MongoDtoFactory} from './MongoDto';
-import {SearchParams, CommonService, EntityNotFoundException, SearcResponse} from '../../commons';
+import {CommonService, EntityNotFoundException, SearchParams, SearcResponse} from 'nestjs-crudify';
 
 export class MongoService<Entity, Dto extends MongoDto> implements CommonService<string, Dto>
 {
@@ -68,7 +68,7 @@ export class MongoService<Entity, Dto extends MongoDto> implements CommonService
   }
 
   async get(id: string) {
-    let query = this.repository.findById(new Types.ObjectId(id));
+    const query = this.repository.findById(new Types.ObjectId(id));
 
     const entity = await query.exec();
 
@@ -81,7 +81,7 @@ export class MongoService<Entity, Dto extends MongoDto> implements CommonService
 
   async delete(id: string) {
     const entity = this.get(id);
-    const response = await this.repository
+    await this.repository
       .deleteOne({
         _id: new Types.ObjectId(id),
       })

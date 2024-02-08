@@ -1,7 +1,11 @@
-# nest-crudify
+# nestjs-crudify
 
 This library was generated with [Nx](https://nx.dev).
 
+## Building
+
+Run `nx build nestjs-crudify` to build the library.
+
 ## Running unit tests
 
-Run `nx test nest-crudify` to execute the unit tests via [Jest](https://jestjs.io).
+Run `nx test nestjs-crudify` to execute the unit tests via [Jest](https://jestjs.io).

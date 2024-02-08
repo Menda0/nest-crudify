@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import {MongoService} from 'nestjs-crudify';
 import {TodoDto, TodoDtoFactory} from './todos.dto';
 import {Todo, TodoDocument} from '../database/Todo.schema';
 import {Model} from 'mongoose';
 import {InjectModel} from '@nestjs/mongoose';
+import {MongoService} from 'nestjs-crudify-mongodb';
 
 @Injectable()
 export class TodosService extends MongoService<Todo, TodoDto>{

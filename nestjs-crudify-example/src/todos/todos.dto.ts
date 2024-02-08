@@ -1,5 +1,5 @@
-import {MongoDto, MongoDtoFactory} from 'nestjs-crudify';
 import {Todo} from '../database/Todo.schema';
+import {MongoDto, MongoDtoFactory} from 'nestjs-crudify-mongodb';
 
 type TodoProperties = {
   id?: string

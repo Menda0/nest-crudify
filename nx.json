@@ -29,5 +29,10 @@
       }
     }
   },
-  "nxCloudAccessToken": "NmM0MGRlYjctZTA5YS00NTNmLTljYmYtOWI5ZDE1MDUzMjc1fHJlYWQtd3JpdGU="
+  "nxCloudAccessToken": "NmM0MGRlYjctZTA5YS00NTNmLTljYmYtOWI5ZDE1MDUzMjc1fHJlYWQtd3JpdGU=",
+  "pluginsConfig": {
+    "@nx/js": {
+      "analyzeSourceFiles": true
+    }
+  }
 }

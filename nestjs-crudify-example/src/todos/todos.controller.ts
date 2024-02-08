@@ -16,7 +16,7 @@ class TodoFilters extends SearchFilters{
   @TransformToFilter<Types.ObjectId[]>(new FilterMatchIn("_id"), (v) => parseValues(v, parseObjectId))
   id: FilterMatchIn<Types.ObjectId[]>
   @TransformToFilter<string>(new FilterMatch("name"))
-  name: FilterLike
+  name: FilterMatch
   @TransformToFilter<string>(new FilterLike("description"))
   description: FilterLike
 }
