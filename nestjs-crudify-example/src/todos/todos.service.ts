@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { MongoService } from 'nestjs-crudify';
+import { MongoService } from 'nestjs-crudify-mongodb';
 import { Todo, TodoDocument } from '../database/Todo.schema';
 import { UsersService } from '../users/users.service';
 import { TodoDto, TodoDtoFactory } from './todos.dto';

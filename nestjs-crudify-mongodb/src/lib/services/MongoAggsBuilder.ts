@@ -1,5 +1,5 @@
 import cloneDeep from 'lodash/cloneDeep';
-import { Filter, PopulateOptions } from '../../commons';
+import { Filter, PopulateOptions } from 'nestjs-crudify';
 
 export class MongoAggsBuilder {
   public pipeline: any[] = [{ $match: {} }];

@@ -1,22 +1,22 @@
 {
-  "name": "nestjs-crudify",
+  "name": "nestjs-crudify-mongodb",
   "$schema": "../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "nestjs-crudify/src",
+  "sourceRoot": "nestjs-crudify-mongodb/src",
   "projectType": "library",
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/nestjs-crudify",
-        "tsConfig": "nestjs-crudify/tsconfig.lib.json",
-        "packageJson": "nestjs-crudify/package.json",
-        "main": "nestjs-crudify/src/index.ts",
-        "assets": ["nestjs-crudify/*.md"]
+        "outputPath": "dist/nestjs-crudify-mongodb",
+        "tsConfig": "nestjs-crudify-mongodb/tsconfig.lib.json",
+        "packageJson": "nestjs-crudify-mongodb/package.json",
+        "main": "nestjs-crudify-mongodb/src/index.ts",
+        "assets": ["nestjs-crudify-mongodb/*.md"]
       }
     },
     "publish": {
-      "command": "node tools/scripts/publish.mjs nestjs-crudify {args.ver} {args.tag}",
+      "command": "node tools/scripts/publish.mjs nestjs-crudify-mongodb {args.ver} {args.tag}",
       "dependsOn": ["build"]
     },
     "lint": {
@@ -27,7 +27,7 @@
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "nestjs-crudify/jest.config.ts"
+        "jestConfig": "nestjs-crudify-mongodb/jest.config.ts"
       }
     }
   },

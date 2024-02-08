@@ -1,4 +1,4 @@
-import {CommonFilter} from '../../commons';
+import {CommonFilter} from 'nestjs-crudify';
 
 export class FilterMatch<T> extends CommonFilter<T, any> {
   getFilter(): any {

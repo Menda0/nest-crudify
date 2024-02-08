@@ -1,4 +1,4 @@
-import {CommonDto, DtoFactory} from '../../commons/services/CommonDto'
+import {CommonDto, DtoFactory} from 'nestjs-crudify';
 
 export class MongoDto extends CommonDto<string>{
 

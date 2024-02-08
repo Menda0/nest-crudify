@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { MongoDto, MongoDtoFactory } from 'nestjs-crudify';
+import { MongoDto, MongoDtoFactory } from 'nestjs-crudify-mongodb';
 import { Todo } from '../database/Todo.schema';
 import { UserDto, UserDtoFactory } from '../users/users.dto';
 
