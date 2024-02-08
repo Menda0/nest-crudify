@@ -1,17 +1,14 @@
 import { Module } from '@nestjs/common';
-import { TodosService } from './todos.service';
-import {TodoDtoFactory} from './todos.dto';
-import {MongooseModule} from '@nestjs/mongoose';
-import {TodoFeature} from '../database/Todo.schema';
+import { MongooseModule } from '@nestjs/mongoose';
+import { TodoFeature } from '../database/Todo.schema';
+import { UsersModule } from './../users/users.module';
 import { TodosController } from './todos.controller';
+import { TodoDtoFactory } from './todos.dto';
+import { TodosService } from './todos.service';
 
 @Module({
-  imports: [
-    MongooseModule.forFeature([
-      TodoFeature
-    ]),
-  ],
+  imports: [UsersModule, MongooseModule.forFeature([TodoFeature])],
   providers: [TodosService, TodoDtoFactory],
-  controllers: [TodosController]
+  controllers: [TodosController],
 })
 export class TodosModule {}

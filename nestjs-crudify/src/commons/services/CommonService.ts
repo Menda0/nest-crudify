@@ -1,6 +1,22 @@
 import { CommonDto } from './CommonDto';
 import { Page, SearchParams } from './CommonFilters';
 
+export enum RelationType {
+  ONE,
+  MANY,
+}
+export abstract class PopulateOptions {
+  constructor(
+    public from: string,
+    public localField: string,
+    public foreignField: string,
+    public as: string,
+    public relationType: RelationType
+  ) {}
+
+  abstract getOperations(): any[];
+}
+
 export class SearchResponse<Id, Dto> {
   data: Dto[];
   total: number;
@@ -14,7 +30,10 @@ export class SearchResponse<Id, Dto> {
 }
 
 export interface CommonService<Id, DTO extends CommonDto<Id>> {
-  search(params?: SearchParams): Promise<SearchResponse<Id, DTO>>;
+  search(options?: {
+    params?: SearchParams;
+    populate?: PopulateOptions[];
+  }): Promise<SearchResponse<Id, DTO>>;
   create(data: any): Promise<DTO>;
   get(id: string): Promise<DTO>;
   delete(id: string): Promise<DTO>;

@@ -1,42 +1,65 @@
-import {Body, Controller, Get, Post, UseInterceptors, Query, Delete, Param, Put} from '@nestjs/common';
 import {
-  CommonCrudController, FilterLike, FilterMatch, FilterMatchIn,
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Query,
+  UseInterceptors,
+} from '@nestjs/common';
+import { Types } from 'mongoose';
+import {
+  CommonCrudController,
+  FilterLike,
+  FilterMatch,
+  FilterMatchIn,
   JsonApiDeserializerPipe,
   JsonApiSerializeInterceptor,
   MongoController,
-  Page, parseObjectId, parseValues,
+  Page,
+  PopulateOne,
   SearchFilters,
   TransformToFilter,
+  parseObjectId,
+  parseValues,
 } from 'nestjs-crudify';
-import {TodosService} from './todos.service';
-import {TodoDto} from './todos.dto';
-import {Types} from 'mongoose';
+import { TodoDto } from './todos.dto';
+import { TodosService } from './todos.service';
 
-class TodoFilters extends SearchFilters{
-  @TransformToFilter<Types.ObjectId[]>(new FilterMatchIn("_id"), (v) => parseValues(v, parseObjectId))
-  id: FilterMatchIn<Types.ObjectId[]>
-  @TransformToFilter<string>(new FilterMatch("name"))
-  name: FilterLike
-  @TransformToFilter<string>(new FilterLike("description"))
-  description: FilterLike
+class TodoFilters extends SearchFilters {
+  @TransformToFilter<Types.ObjectId[]>(new FilterMatchIn('_id'), (v) =>
+    parseValues(v, parseObjectId)
+  )
+  id: FilterMatchIn<Types.ObjectId[]>;
+  @TransformToFilter<string>(new FilterMatch('name'))
+  name: FilterLike;
+  @TransformToFilter<string>(new FilterLike('description'))
+  description: FilterLike;
 }
 
 @Controller('todos')
 @UseInterceptors(JsonApiSerializeInterceptor())
-export class TodosController extends MongoController<TodoDto, TodosService> implements CommonCrudController<TodoDto>{
-
+export class TodosController
+  extends MongoController<TodoDto, TodosService>
+  implements CommonCrudController<TodoDto>
+{
   constructor(private todosService: TodosService) {
-    super(todosService)
+    super(todosService);
   }
 
   @Post()
-  create(@Body(new JsonApiDeserializerPipe()) body: any ): Promise<any> {
-    return this._create(body)
+  create(@Body(new JsonApiDeserializerPipe()) body: any): Promise<any> {
+    return this._create(body);
   }
 
-  @Put(":id")
-  update(@Param('id') id: string,@Body(new JsonApiDeserializerPipe()) body: any ): Promise<any> {
-    return this._update(id, body)
+  @Put(':id')
+  update(
+    @Param('id') id: string,
+    @Body(new JsonApiDeserializerPipe()) body: any
+  ): Promise<any> {
+    return this._update(id, body);
   }
 
   @Get()
@@ -44,13 +67,15 @@ export class TodosController extends MongoController<TodoDto, TodosService> impl
     @Query('sort') sort?: string,
     @Query('search') search?: string,
     @Query('page') page?: Page,
-    @Query('filter') filter?: TodoFilters,
-  ){
-    return this._search(sort, search, page, filter)
+    @Query('filter') filter?: TodoFilters
+  ) {
+    return this._search(sort, search, page, filter, [
+      new PopulateOne('user', 'users'),
+    ]);
   }
 
-  @Delete(":id")
-  delele(@Param('id') id: string){
-    return this._delete(id)
+  @Delete(':id')
+  delele(@Param('id') id: string) {
+    return this._delete(id);
   }
 }

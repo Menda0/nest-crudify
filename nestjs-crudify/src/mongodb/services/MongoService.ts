@@ -2,11 +2,58 @@ import { Model, Types } from 'mongoose';
 import {
   CommonService,
   EntityNotFoundException,
+  PopulateOptions,
+  RelationType,
   SearchParams,
   SearchResponse,
 } from '../../commons';
 import { MongoAggsBuilder } from './MongoAggsBuilder';
 import { MongoDto, MongoDtoFactory } from './MongoDto';
+
+export class PopulateOne extends PopulateOptions {
+  constructor(from: string, type: string) {
+    super(type, from, '_id', from, RelationType.ONE);
+  }
+
+  override getOperations(): any[] {
+    return [
+      {
+        $lookup: {
+          from: this.from,
+          localField: this.localField,
+          foreignField: this.foreignField,
+          as: this.as,
+        },
+      },
+      {
+        $unwind: {
+          path: `$${this.localField}`,
+          includeArrayIndex: 'id',
+          preserveNullAndEmptyArrays: false,
+        },
+      },
+    ];
+  }
+}
+
+export class PopulateMany extends PopulateOptions {
+  constructor(from: string, type: string) {
+    super(type, from, '_id', from, RelationType.MANY);
+  }
+
+  override getOperations(): any[] {
+    return [
+      {
+        $lookup: {
+          from: this.from,
+          localField: this.localField,
+          foreignField: this.foreignField,
+          as: this.as,
+        },
+      },
+    ];
+  }
+}
 
 export class MongoService<Entity, Dto extends MongoDto>
   implements CommonService<string, Dto>
@@ -30,7 +77,12 @@ export class MongoService<Entity, Dto extends MongoDto>
     return this.factory.create(entity);
   }
 
-  async search(params?: SearchParams) {
+  async search(options?: {
+    params?: SearchParams;
+    populate: PopulateOptions[];
+  }) {
+    const { params, populate = [] } = options ?? {};
+
     const operation = new MongoAggsBuilder();
 
     const filters = params?.filter?.getIterator();
@@ -38,6 +90,10 @@ export class MongoService<Entity, Dto extends MongoDto>
     while (filters?.hasNext()) {
       const filter = filters?.next();
       operation.withFilter(filter);
+    }
+
+    for (const relation of populate) {
+      operation.withPopulate(relation);
     }
 
     const countOperation = this.count(operation.build());

@@ -1,29 +1,34 @@
 import cloneDeep from 'lodash/cloneDeep';
-import {Filter} from '../../commons';
+import { Filter, PopulateOptions } from '../../commons';
 
 export class MongoAggsBuilder {
-  public pipeline: any[] = [{$match: {}}];
+  public pipeline: any[] = [{ $match: {} }];
 
   withStep(step: any) {
     this.pipeline.push(step);
+
     return this;
   }
 
-  withFilter(filter: Filter<any,any>){
-    this.pipeline.push(filter.getFilter())
+  withFilter(filter: Filter<any, any>) {
+    this.pipeline.push(filter.getFilter());
+
+    return this;
   }
 
   withLimit(limit: number) {
     this.pipeline.push({ $limit: limit });
+
     return this;
   }
 
   withOffset(offset: number) {
     this.pipeline.push({ $skip: offset });
+
     return this;
   }
 
-  getSort(criteria: string){
+  getSort(criteria: string) {
     let order;
     let field;
     if (criteria.startsWith('-')) {
@@ -33,21 +38,29 @@ export class MongoAggsBuilder {
       order = 1;
       field = criteria;
     }
-    return { [field]: order }
+    return { [field]: order };
   }
 
   withSort(sort: string) {
     // Applied sort to multiple criteria
-    if(sort.includes(",")){
-      const criterias = sort.split(",")
-      let $sort = {}
-      for(const criteria of criterias){
-        $sort = {...$sort, ...this.getSort(criteria)}
+    if (sort.includes(',')) {
+      const criterias = sort.split(',');
+      let $sort = {};
+      for (const criteria of criterias) {
+        $sort = { ...$sort, ...this.getSort(criteria) };
       }
-      this.pipeline.push({$sort});
-    }else{
-      this.pipeline.push({$sort: this.getSort(sort)});
+      this.pipeline.push({ $sort });
+    } else {
+      this.pipeline.push({ $sort: this.getSort(sort) });
     }
+
+    return this;
+  }
+
+  withPopulate(populate: PopulateOptions) {
+    this.pipeline = [...this.pipeline, ...populate.getOperations()];
+
+    return this;
   }
 
   build() {
