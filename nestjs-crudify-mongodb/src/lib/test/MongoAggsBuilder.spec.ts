@@ -1,4 +1,4 @@
-import { SearchFilters } from '../../commons';
+import { SearchFilters } from 'nestjs-crudify';
 import {
   FilterLike,
   FilterMatch,
@@ -14,11 +14,9 @@ describe('Testing MongoAggsBuilder', () => {
   });
 
   it('should be able to add a match filter"', () => {
-    const matchFilter = new FilterMatch<string>('filter1');
-    matchFilter.value = 'this is a test';
-    builder.withFilter(matchFilter);
+    const matchFilter = new FilterMatch<string>('filter1', 'this is a test');
 
-    const query = builder.build();
+    const query = builder.withFilter(matchFilter).build();
 
     const expectedResult = [
       { $match: {} },
@@ -31,11 +29,11 @@ describe('Testing MongoAggsBuilder', () => {
   });
 
   it('should be able to add a match in filter"', () => {
-    const matchFilter = new FilterMatchIn<string[]>('filter1');
-    matchFilter.value = ['this is a test'];
-    builder.withFilter(matchFilter);
+    const matchInFilter = new FilterMatchIn<string>('filter1', [
+      'this is a test',
+    ]);
 
-    const query = builder.build();
+    const query = builder.withFilter(matchInFilter).build();
 
     const expectedResult = [
       { $match: {} },
@@ -48,11 +46,9 @@ describe('Testing MongoAggsBuilder', () => {
   });
 
   it('should be able to add a match like', () => {
-    const matchFilter = new FilterLike('filter1');
-    matchFilter.value = 'this is a test';
-    builder.withFilter(matchFilter);
+    const matchFilter = new FilterLike('filter1', 'this is a test');
 
-    const query = builder.build();
+    const query = builder.withFilter(matchFilter).build();
 
     const expectedResult = [
       { $match: {} },
@@ -73,10 +69,9 @@ describe('Testing MongoAggsBuilder', () => {
       }
     }
 
-    const nameFilter = new FilterLike('name');
-    nameFilter.value = 'this is a test';
-    const ageFilter = new FilterMatch<number>('age');
-    ageFilter.value = 23;
+    const nameFilter = new FilterLike('name', 'this is a test');
+    const ageFilter = new FilterMatch<number>('age', 23);
+
     const searchFilters = new CustomSearchFilters(nameFilter, ageFilter);
 
     const filters = searchFilters.getIterator();

@@ -1,6 +1,7 @@
 import { Types } from 'mongoose';
 import { SearchFilters, TransformToFilter, parseValues } from 'nestjs-crudify';
 import {
+  FilterLike,
   FilterMatch,
   FilterMatchIn,
   parseObjectId,

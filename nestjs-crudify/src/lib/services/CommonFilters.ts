@@ -1,46 +1,54 @@
-import {TransformToNumber} from '../pipes';
+import { TransformToNumber } from '../pipes';
 
-export interface Filter<Input, Result> {
-  name: string
-  getFilter(): Result
+export interface Filter<ValueType, FilterStructure> {
+  name: string;
+  value?: ValueType;
+  getFilter(): FilterStructure;
 }
 
-export abstract class CommonFilter<Input, Result>  implements Filter<Input, Result>{
-  value?: Input
+export abstract class CommonFilter<ValueType, FilterStructure>
+  implements Filter<ValueType, FilterStructure>
+{
   name: string;
+  value?: ValueType;
 
-  constructor(name: string) {
+  constructor(name: string, value?: ValueType) {
     this.name = name;
+    this.value = value;
   }
 
-  abstract getFilter(): Result
+  abstract getFilter(): FilterStructure;
+
+  setValue(value: ValueType) {
+    this.value = value;
+  }
 }
 
 export class SearchFiltersIterator {
-  private keys: string[]
-  private index: number
+  private keys: string[];
+  private index: number;
 
   constructor(private searchFilters: any) {
-    this.keys = Object.keys(searchFilters)
-    this.index = 0
+    this.keys = Object.keys(searchFilters);
+    this.index = 0;
   }
-  hasNext(){
-    return this.keys.length > this.index
+  hasNext() {
+    return this.keys.length > this.index;
   }
   next(): Filter<any, any> {
     if (!this.hasNext()) {
-      throw new Error("No more elements in iterator");
+      throw new Error('No more elements in iterator');
     }
 
-    const filterKey = this.keys[this.index]
-    this.index++
-    return this.searchFilters[filterKey]
+    const filterKey = this.keys[this.index];
+    this.index++;
+    return this.searchFilters[filterKey];
   }
 }
 
-export abstract class SearchFilters{
-  getIterator(){
-    return new SearchFiltersIterator(this)
+export abstract class SearchFilters {
+  getIterator() {
+    return new SearchFiltersIterator(this);
   }
 }
 
@@ -49,7 +57,7 @@ export class Page {
   number!: number;
   @TransformToNumber()
   size!: number;
-};
+}
 
 export type SearchParams = {
   page?: Page;

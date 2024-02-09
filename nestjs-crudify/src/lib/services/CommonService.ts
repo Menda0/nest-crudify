@@ -29,11 +29,13 @@ export class SearchResponse<Id, Dto> {
   }
 }
 
+type SearchOptions = {
+  params?: SearchParams;
+  populate?: PopulateOptions[];
+};
+
 export interface CommonService<Id, DTO extends CommonDto<Id>> {
-  search(options?: {
-    params?: SearchParams;
-    populate?: PopulateOptions[];
-  }): Promise<SearchResponse<Id, DTO>>;
+  search(options?: SearchOptions): Promise<SearchResponse<Id, DTO>>;
   create(data: any): Promise<DTO>;
   get(id: string): Promise<DTO>;
   delete(id: string): Promise<DTO>;

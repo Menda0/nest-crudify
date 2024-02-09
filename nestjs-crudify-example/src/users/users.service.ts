@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { MongoService } from 'nestjs-crudify';
+import { MongoService } from 'nestjs-crudify-mongodb';
 import { User, UserDocument } from '../database/User.schema';
 import { UserDto, UserDtoFactory } from './users.dto';
 

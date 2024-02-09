@@ -1,4 +1,4 @@
-import { MongoDto, MongoDtoFactory } from 'nestjs-crudify';
+import { MongoDto, MongoDtoFactory } from 'nestjs-crudify-mongodb';
 import { User } from '../database/User.schema';
 
 type UserProperties = {

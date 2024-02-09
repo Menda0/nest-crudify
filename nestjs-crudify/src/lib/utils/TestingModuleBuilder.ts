@@ -1,3 +1,4 @@
+import { ValidationPipe } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Test } from '@nestjs/testing';
@@ -64,6 +65,8 @@ export class TestingModuleBuilder {
 
     this.app = this.module.createNestApplication();
     this.app.enableShutdownHooks();
+    this.app.useGlobalPipes(new ValidationPipe({ transform: true }));
+
     await this.app.init();
 
     return this;

@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
-import { PopulateOne, TestingModuleBuilder } from 'nestjs-crudify';
+import { TestingModuleBuilder } from 'nestjs-crudify';
+import { PopulateOne } from 'nestjs-crudify-mongodb';
 import { UserDto } from '../users/users.dto';
 import { TodoDto } from './todos.dto';
 import { TodosModule } from './todos.module';
@@ -43,7 +44,7 @@ describe('TodosService', () => {
     expect(todoInDb.id).toBeDefined();
     expect(todoInDb.name).toEqual(todo.name);
     expect(todoInDb.description).toEqual(todo.description);
-    expect(todoInDb.user.id).toBeDefined();
+    expect(todoInDb.user.id!).toBeDefined();
     expect(todoInDb.type).toEqual('todo');
   });
 
