@@ -1,5 +1,5 @@
-import {Types} from 'mongoose';
+import { Types } from 'mongoose';
 
-export function parseObjectId(value: string){
-  return new Types.ObjectId(value)
+export function parseObjectId(value: string) {
+  return new Types.ObjectId(value);
 }

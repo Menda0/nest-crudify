@@ -3,6 +3,7 @@ import {
   FilterLike,
   FilterMatch,
   FilterMatchIn,
+  FilterOr,
   MongoAggsBuilder,
 } from '../services';
 
@@ -60,6 +61,31 @@ describe('Testing MongoAggsBuilder', () => {
     expect(query).toEqual(expectedResult);
   });
 
+  it('should be able to add an or filter', () => {
+
+    const orFilter = new FilterOr('orFilter', [
+      new FilterLike('filterLike1', 'like'),
+      new FilterLike('filterLike2', 'like'),
+    ]);
+
+    const query = builder.withFilter(orFilter).build();
+
+    const expectedResult = [
+      { $match: {} },
+      {
+        $match: {
+          $or: [
+            { $match: { filterLike1: { $regex: 'like', $options: 'i' } } },
+            { $match: { filterLike2: { $regex: 'like', $options: 'i' } } },
+          ],
+        },
+      },
+    ];
+
+    expect(query).toEqual(expectedResult);
+  });
+
+  // TODO[carlos]: Check
   it('should build query from search params', () => {
     const builder = new MongoAggsBuilder();
 
