@@ -11,7 +11,7 @@ export class MongoAggsBuilder {
   }
 
   withFilter(filter: Filter<any, any>) {
-    this.pipeline.push(filter.getFilter());
+    this.pipeline.push({ $match: filter.getFilter() });
 
     return this;
   }

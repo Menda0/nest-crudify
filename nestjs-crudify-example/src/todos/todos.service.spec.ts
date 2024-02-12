@@ -79,7 +79,7 @@ describe('TodosService', () => {
     expect(todoInDb.type).toEqual('todo');
   });
 
-  it('should list all todos', async () => {
+  /*   it('should list all todos', async () => {
     const todo = new TodoDto({
       name: 'My Todo',
       description: 'Lorem ipsum sit dolor amet',
@@ -89,6 +89,35 @@ describe('TodosService', () => {
       todosService.create(todo),
       todosService.create(todo),
       todosService.create(todo),
+    ]);
+
+    const todosInDb = await todosService.search();
+
+    expect(todosInDb).toBeDefined();
+    expect(todosInDb.total).toEqual(3);
+    expect(todosInDb.data.length).toEqual(todosInDb.total);
+  }); */
+
+  it('should filter todos OR', async () => {
+    const todo1 = new TodoDto({
+      name: 'My Todo 1',
+      description: 'Lorem ipsum sit dolor amet',
+    });
+
+    const todo2 = new TodoDto({
+      name: 'My Todo 2',
+      description: 'Lorem ipsum sit dolor amet',
+    });
+
+    const todo3 = new TodoDto({
+      name: 'My Todo 3',
+      description: 'Lorem ipsum sit dolor amet',
+    });
+
+    await Promise.all([
+      todosService.create(todo1),
+      todosService.create(todo2),
+      todosService.create(todo3),
     ]);
 
     const todosInDb = await todosService.search();

@@ -23,6 +23,7 @@ import {
   FilterLike,
   FilterMatch,
   FilterMatchIn,
+  FilterOr,
   MongoController,
   PopulateOne,
   parseObjectId,
@@ -39,6 +40,11 @@ class TodoFilters extends SearchFilters {
   name: FilterLike;
   @TransformToFilter<string>(new FilterLike('description'))
   description: FilterLike;
+
+  @TransformToFilter<any>(new FilterOr('descriptionOrName'), (v) => {
+    return [new FilterLike('description', v), new FilterLike('name', v)];
+  })
+  descriptionOrName: FilterOr<any>;
 }
 
 @Controller('todos')

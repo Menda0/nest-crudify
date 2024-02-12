@@ -1,3 +1,6 @@
+import dotenv from 'dotenv';
+dotenv.config({ path: '.env.test' });
+
 /* eslint-disable */
 export default {
   displayName: 'nestjs-crudify-example',

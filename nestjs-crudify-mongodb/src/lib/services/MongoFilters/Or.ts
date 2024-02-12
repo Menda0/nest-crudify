@@ -1,9 +1,7 @@
 import { CommonFilter } from 'nestjs-crudify';
 
 type TFilterOrStructure<T> = {
-  $match: {
-    $or: T[] | undefined;
-  };
+  $or: T[] | undefined;
 };
 
 export class FilterOr<T> extends CommonFilter<
@@ -12,9 +10,7 @@ export class FilterOr<T> extends CommonFilter<
 > {
   getFilter(): TFilterOrStructure<T> {
     return {
-      $match: {
-        $or: this.value?.map((filter) => filter.getFilter()),
-      },
+      $or: this.value ? this.value.map((filter) => filter.getFilter()) : [],
     };
   }
 }

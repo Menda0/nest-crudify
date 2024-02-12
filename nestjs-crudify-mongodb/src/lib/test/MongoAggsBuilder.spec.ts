@@ -62,7 +62,6 @@ describe('Testing MongoAggsBuilder', () => {
   });
 
   it('should be able to add an or filter', () => {
-
     const orFilter = new FilterOr('orFilter', [
       new FilterLike('filterLike1', 'like'),
       new FilterLike('filterLike2', 'like'),
@@ -75,8 +74,8 @@ describe('Testing MongoAggsBuilder', () => {
       {
         $match: {
           $or: [
-            { $match: { filterLike1: { $regex: 'like', $options: 'i' } } },
-            { $match: { filterLike2: { $regex: 'like', $options: 'i' } } },
+            { filterLike1: { $regex: 'like', $options: 'i' } },
+            { filterLike2: { $regex: 'like', $options: 'i' } },
           ],
         },
       },

@@ -1,9 +1,7 @@
 import { CommonFilter } from 'nestjs-crudify';
 
 type TFilterLikeStructure<T> = {
-  $match: {
-    [key: string]: { $regex: T | undefined; $options: 'i' };
-  };
+  [key: string]: { $regex: T | undefined; $options: 'i' };
 };
 
 export class FilterLike extends CommonFilter<
@@ -12,9 +10,7 @@ export class FilterLike extends CommonFilter<
 > {
   getFilter(): TFilterLikeStructure<string> {
     return {
-      $match: {
-        [this.name]: { $regex: this.value, $options: 'i' },
-      },
+      [this.name]: { $regex: this.value, $options: 'i' },
     };
   }
 }
