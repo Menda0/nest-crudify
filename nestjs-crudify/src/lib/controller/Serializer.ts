@@ -55,13 +55,11 @@ export const JsonApiSerializeInterceptor = (includeNames = []) => {
     readonly jsonaSerializer = new JsonSerializer();
 
     intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
-      return next
-        .handle()
-        .pipe(
-          map((data) =>
-            this.jsonaSerializer.serialize({ stuff: data, includeNames })
-          )
-        );
+      return next.handle().pipe(
+        map((data) => {
+          return this.jsonaSerializer.serialize({ stuff: data, includeNames });
+        })
+      );
     }
   }
   return JsonApiSerializeInterceptorImpl;

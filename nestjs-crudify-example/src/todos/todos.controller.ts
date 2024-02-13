@@ -21,7 +21,6 @@ import {
 } from 'nestjs-crudify';
 import {
   FilterLike,
-  FilterMatch,
   FilterMatchIn,
   FilterOr,
   MongoController,
@@ -36,8 +35,10 @@ class TodoFilters extends SearchFilters {
     parseValues(v, parseObjectId)
   )
   id: FilterMatchIn<Types.ObjectId[]>;
-  @TransformToFilter<string>(new FilterMatch('name'))
+
+  @TransformToFilter<string>(new FilterLike('name'))
   name: FilterLike;
+
   @TransformToFilter<string>(new FilterLike('description'))
   description: FilterLike;
 

@@ -4,8 +4,14 @@ import { GeneralDocument } from './GeneralDocument';
 
 @Schema({ timestamps: true })
 export class User extends GeneralDocument {
-  @Prop()
-  name?: string;
+  @Prop({ required: true })
+  name: string;
+
+  @Prop({ required: true, unique: true })
+  email: string;
+
+  @Prop({ select: false })
+  password: string;
 }
 
 export type UserDocument = HydratedDocument<User>;
