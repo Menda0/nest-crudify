@@ -9,6 +9,7 @@ export class FilterOr<T> extends CommonFilter<
   TFilterOrStructure<T>
 > {
   getFilter(): TFilterOrStructure<T> {
+    // TODO[cami]: Mongo does not like when empty array is used as a value for $and / $or / $nor filters
     return {
       $or: this.value ? this.value.map((filter) => filter.getFilter()) : [],
     };

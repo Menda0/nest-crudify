@@ -1,5 +1,9 @@
 import { SearchFilters } from 'nestjs-crudify';
 import {
+  FilterAnd,
+  FilterBetween,
+  FilterGreaterThan,
+  FilterLessThan,
   FilterLike,
   FilterMatch,
   FilterMatchIn,
@@ -84,7 +88,68 @@ describe('Testing MongoAggsBuilder', () => {
     expect(query).toEqual(expectedResult);
   });
 
-  // TODO[carlos]: Check
+  it('should be able to add an and filter', () => {
+    const andFilter = new FilterAnd('andFilter', [
+      new FilterLike('filterLike1', 'like'),
+      new FilterLike('filterLike2', 'like'),
+    ]);
+
+    const query = builder.withFilter(andFilter).build();
+
+    const expectedResult = [
+      { $match: {} },
+      {
+        $match: {
+          $and: [
+            { filterLike1: { $regex: 'like', $options: 'i' } },
+            { filterLike2: { $regex: 'like', $options: 'i' } },
+          ],
+        },
+      },
+    ];
+
+    expect(query).toEqual(expectedResult);
+  });
+
+  it('should be able to add a between filter', () => {
+    const betweenFilter = new FilterBetween('someField', [1, 5]);
+
+    const query = builder.withFilter(betweenFilter).build();
+
+    const expectedResult = [
+      { $match: {} },
+      {
+        $match: {
+          someField: {
+            $gte: 1,
+            $lte: 5,
+          },
+        },
+      },
+    ];
+
+    expect(query).toEqual(expectedResult);
+  });
+
+  it('should be able to add a range filter', () => {
+    const lessThanFilter = new FilterLessThan('someField', 10);
+    const greaterThanFilter = new FilterGreaterThan('someField', 1);
+
+    const query = builder
+      .withFilter(lessThanFilter)
+      .withFilter(greaterThanFilter)
+      .build();
+
+    const expectedResult = [
+      { $match: {} },
+      { $match: { someField: { $lt: 10 } } },
+      { $match: { someField: { $gt: 1 } } },
+    ];
+
+    expect(query).toEqual(expectedResult);
+  });
+
+  // TODO[cami]: Check
   it('should build query from search params', () => {
     const builder = new MongoAggsBuilder();
 

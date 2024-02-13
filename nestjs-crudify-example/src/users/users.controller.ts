@@ -67,7 +67,6 @@ export class UsersController
     @Query('page') page?: Page,
     @Query('filter') filter?: UserFilters
   ) {
-    console.log(filter);
     return this._search(sort, search, page, filter, [
       new PopulateMany('todos', 'todos'),
     ]);
