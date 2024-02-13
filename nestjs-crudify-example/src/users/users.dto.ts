@@ -23,6 +23,7 @@ export class UserDto extends MongoDto {
     updateAt,
   }: UserProperties | undefined) {
     super('user');
+
     this.id = id;
     this.name = name;
     this.email = email;
