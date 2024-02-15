@@ -1,10 +1,12 @@
 import mongoose from 'mongoose';
 import { TestingModuleBuilder } from 'nestjs-crudify';
+import { UsersService } from '../users/users.service';
 import { TodosController } from './todos.controller';
 import { TodosModule } from './todos.module';
 
 describe('TodosController', () => {
-  let controller: TodosController;
+  let todosController: TodosController;
+  let usersService: UsersService;
   let moduleBuilder: TestingModuleBuilder;
 
   beforeEach(async () => {
@@ -14,7 +16,9 @@ describe('TodosController', () => {
 
     await moduleBuilder.build();
 
-    controller = moduleBuilder.module.get<TodosController>(TodosController);
+    todosController =
+      moduleBuilder.module.get<TodosController>(TodosController);
+    usersService = moduleBuilder.module.get<UsersService>(UsersService);
   });
 
   afterEach(async () => {
@@ -24,7 +28,28 @@ describe('TodosController', () => {
   });
 
   it('should be defined', () => {
-    expect(controller).toBeDefined();
+    expect(todosController).toBeDefined();
+  });
+
+  it('should create todo with user', async () => {
+    const user = await usersService.create({
+      name: 'Name',
+      email: 'Email',
+      password: '123',
+    });
+
+    const input = {
+      type: 'todos',
+      name: 'Todo',
+      description: 'Lorem impsum',
+      user: {
+        id: user.id,
+      },
+    };
+
+    const jsonData = await todosController.create(input);
+
+    expect(jsonData).toBeDefined();
   });
 
   it('should create todo', async () => {
@@ -38,10 +63,10 @@ describe('TodosController', () => {
       },
     };
 
-    const jsonData = await controller.create(input);
+    const jsonData = await todosController.create(input);
 
     expect(jsonData).toBeDefined();
-  }, 99999);
+  });
 
   it('should search todo', async () => {
     const input = {
@@ -54,11 +79,11 @@ describe('TodosController', () => {
       },
     };
 
-    const jsonResponse = await controller.create(input);
+    const jsonResponse = await todosController.create(input);
 
     expect(jsonResponse).toBeDefined();
 
-    const searchResult = await controller.search();
+    const searchResult = await todosController.search();
 
     expect(searchResult).toBeDefined();
   });

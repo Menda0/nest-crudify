@@ -2,12 +2,14 @@ import mongoose from 'mongoose';
 import { TestingModuleBuilder } from 'nestjs-crudify';
 import { PopulateOne } from 'nestjs-crudify-mongodb';
 import { UserDto } from '../users/users.dto';
+import { UsersService } from '../users/users.service';
 import { TodoDto } from './todos.dto';
 import { TodosModule } from './todos.module';
 import { TodosService } from './todos.service';
 
 describe('TodosService', () => {
   let todosService: TodosService;
+  let usersService: UsersService;
 
   let moduleBuilder: TestingModuleBuilder;
 
@@ -19,6 +21,7 @@ describe('TodosService', () => {
     await moduleBuilder.build();
 
     todosService = moduleBuilder.module.get<TodosService>(TodosService);
+    usersService = moduleBuilder.module.get<UsersService>(UsersService);
   });
 
   afterEach(async () => {
@@ -32,10 +35,18 @@ describe('TodosService', () => {
   });
 
   it('should add todo with user', async () => {
+    const userInDb = await usersService.create({
+      name: 'a',
+      email: 'b',
+      password: '-1',
+    });
+
     const todo = new TodoDto({
       name: 'My Todo',
       description: 'Lorem ipsum sit dolor amet',
-      user: new UserDto({ name: 'Name' }),
+      user: new UserDto({
+        id: userInDb.id,
+      }),
     });
 
     const todoInDb = await todosService.create(todo);
@@ -52,7 +63,7 @@ describe('TodosService', () => {
     const todo = new TodoDto({
       name: 'My Todo',
       description: 'Lorem ipsum sit dolor amet',
-      user: new UserDto({ name: 'Name' }),
+      user: new UserDto({ name: 'Name', email: 'Email' }),
     });
 
     await todosService.create(todo);
@@ -62,7 +73,7 @@ describe('TodosService', () => {
     });
 
     expect(res).toBeDefined();
-  }, 999999999);
+  });
 
   it('should add todo', async () => {
     const todo = new TodoDto({
@@ -79,7 +90,7 @@ describe('TodosService', () => {
     expect(todoInDb.type).toEqual('todo');
   });
 
-  /*   it('should list all todos', async () => {
+  it('should list all todos', async () => {
     const todo = new TodoDto({
       name: 'My Todo',
       description: 'Lorem ipsum sit dolor amet',
@@ -96,7 +107,7 @@ describe('TodosService', () => {
     expect(todosInDb).toBeDefined();
     expect(todosInDb.total).toEqual(3);
     expect(todosInDb.data.length).toEqual(todosInDb.total);
-  }); */
+  });
 
   it('should filter todos OR', async () => {
     const todo1 = new TodoDto({

@@ -9,6 +9,7 @@ import {
 } from 'nestjs-crudify';
 import { MongoAggsBuilder } from './MongoAggsBuilder';
 import { MongoDto, MongoDtoFactory } from './MongoDto';
+
 export class PopulateOne extends PopulateOptions {
   constructor(from: string, type: string) {
     super(type, from, '_id', from, RelationType.ONE);
@@ -59,7 +60,7 @@ export class MongoService<Entity, Dto extends MongoDto>
 {
   constructor(
     protected readonly repository: Model<Entity>,
-    protected readonly factory: MongoDtoFactory<Entity, Dto>
+    protected readonly dtoFactory: MongoDtoFactory<Entity, Dto>
   ) {}
 
   private async count(operation: any) {
@@ -69,11 +70,12 @@ export class MongoService<Entity, Dto extends MongoDto>
     return count;
   }
 
-  async create(data: any) {
-    data.id = undefined;
+  async create(data: Omit<Entity, '_id' | 'createdAt' | 'updatedAt'>) {
+    data = { ...data, id: undefined };
 
-    const entity = await this.repository.create({ ...data });
-    return this.factory.create(entity);
+    const entity = await this.repository.create(data);
+
+    return this.dtoFactory.create(entity);
   }
 
   async search(options?: {
@@ -84,15 +86,15 @@ export class MongoService<Entity, Dto extends MongoDto>
 
     const operation = new MongoAggsBuilder();
 
+    for (const relation of populate) {
+      operation.withPopulate(relation);
+    }
+
     const filters = params?.filter?.getIterator();
 
     while (filters?.hasNext()) {
       const filter = filters?.next();
       operation.withFilter(filter);
-    }
-
-    for (const relation of populate) {
-      operation.withPopulate(relation);
     }
 
     const countOperation = this.count(operation.build());
@@ -122,18 +124,20 @@ export class MongoService<Entity, Dto extends MongoDto>
       searchOpearation,
     ]);
 
-    const data = result.map((e) => this.factory.create(e));
+    const data = result.map((e) => this.dtoFactory.create(e));
 
     return new SearchResponse(data, total, params?.page);
   }
 
-  async get(id: string) {
-    const query = this.repository.findById(new Types.ObjectId(id));
+  async get(id: string, populate?: PopulateOptions[]) {
+    const query = this.repository
+      .findById(new Types.ObjectId(id))
+      .populate(populate?.map((p) => p.from) ?? []);
 
-    const entity = await query.exec();
+    const entity = (await query.exec()) as Entity;
 
     if (entity) {
-      return this.factory.create(entity);
+      return this.dtoFactory.create(entity);
     } else {
       throw new EntityNotFoundException(this.repository.modelName, id);
     }
@@ -141,6 +145,7 @@ export class MongoService<Entity, Dto extends MongoDto>
 
   async delete(id: string) {
     const entity = this.get(id);
+
     await this.repository
       .deleteOne({
         _id: new Types.ObjectId(id),

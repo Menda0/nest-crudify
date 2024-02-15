@@ -9,4 +9,5 @@ export class MongoDto extends CommonDto<string> {
 export interface MongoDtoFactory<Entity, Dto extends MongoDto>
   extends DtoFactory<Entity, string, Dto> {
   create(e: Entity): Dto;
+  createEntity(dto: Dto): Entity;
 }

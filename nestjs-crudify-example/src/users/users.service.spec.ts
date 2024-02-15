@@ -1,18 +1,29 @@
-import { Test, TestingModule } from '@nestjs/testing';
+import mongoose from 'mongoose';
+import { TestingModuleBuilder } from 'nestjs-crudify';
+import { UsersModule } from './users.module';
 import { UsersService } from './users.service';
 
 describe('UsersService', () => {
-  let service: UsersService;
+  let moduleBuilder: TestingModuleBuilder;
+  let usersService: UsersService;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [UsersService],
-    }).compile();
+    moduleBuilder = new TestingModuleBuilder()
+      .withMongoInMemory()
+      .withImports(UsersModule);
 
-    service = module.get<UsersService>(UsersService);
+    await moduleBuilder.build();
+
+    usersService = moduleBuilder.module.get<UsersService>(UsersService);
+  });
+
+  afterEach(async () => {
+    await mongoose.disconnect();
+    await moduleBuilder.mongoServer.stop();
+    await moduleBuilder.module.close();
   });
 
   it('should be defined', () => {
-    expect(service).toBeDefined();
+    expect(usersService).toBeDefined();
   });
 });

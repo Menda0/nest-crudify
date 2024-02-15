@@ -71,6 +71,11 @@ export class TodosController
     return this._update(id, body);
   }
 
+  @Get(':id')
+  get(@Param('id') id: string) {
+    return this.todosService.get(id, [new PopulateOne('user', 'users')]);
+  }
+
   @Get()
   search(
     @Query('sort') sort?: string,

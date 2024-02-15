@@ -14,6 +14,13 @@ import {
 import { Observable, map } from 'rxjs';
 import { SearchResponse } from '../services';
 
+export type TSerializedData<T> = {
+  data: {
+    type: string;
+    attributes: T;
+  };
+};
+
 class JsonSerializer extends Jsona {
   override serialize({
     stuff,

@@ -37,7 +37,7 @@ type SearchOptions = {
 export interface CommonService<Id, DTO extends CommonDto<Id>> {
   search(options?: SearchOptions): Promise<SearchResponse<Id, DTO>>;
   create(data: any): Promise<DTO>;
-  get(id: string): Promise<DTO>;
+  get(id: string, populate?: PopulateOptions[]): Promise<DTO>;
   delete(id: string): Promise<DTO>;
   update(id: Id, data: any): Promise<DTO>;
 }

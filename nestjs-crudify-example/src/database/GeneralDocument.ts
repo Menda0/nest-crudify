@@ -1,8 +1,8 @@
-import {Prop} from '@nestjs/mongoose';
-import {ObjectId} from "mongoose";
+import { Prop } from '@nestjs/mongoose';
+import { Types } from 'mongoose';
 
 export class GeneralDocument {
-  _id!: ObjectId
+  _id!: Types.ObjectId;
 
   @Prop()
   createdAt!: number;
