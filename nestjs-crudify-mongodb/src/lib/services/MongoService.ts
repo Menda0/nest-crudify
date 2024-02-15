@@ -29,7 +29,7 @@ export class PopulateOne extends PopulateOptions {
         $unwind: {
           path: `$${this.localField}`,
           includeArrayIndex: 'id',
-          preserveNullAndEmptyArrays: false,
+          preserveNullAndEmptyArrays: true,
         },
       },
     ];
@@ -94,7 +94,10 @@ export class MongoService<Entity, Dto extends MongoDto>
 
     while (filters?.hasNext()) {
       const filter = filters?.next();
-      operation.withFilter(filter);
+
+      if (filter) {
+        operation.withFilter(filter);
+      }
     }
 
     const countOperation = this.count(operation.build());

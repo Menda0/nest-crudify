@@ -1,3 +1,3 @@
-export * from "./ParserPagePipe"
-export * from "./TransformToNumber"
-export * from "./TransformToFilter"
+export * from './ParserPagePipe';
+export * from './TransformToFilter';
+export * from './TransformToNumber';

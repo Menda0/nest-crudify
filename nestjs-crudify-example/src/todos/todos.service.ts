@@ -18,16 +18,14 @@ export class TodosService extends MongoService<Todo, TodoDto> {
   }
 
   override async create(data: TodoDto): Promise<TodoDto> {
-    if (data?.user?.id) {
-      const userDto = await this.usersService.get(data.user.id);
+    const userId = data?.user?.id;
 
-      if (!userDto) {
-        // ! Throw error user does not exist
-      }
+    if (userId) {
+      // * It throws error if user with userId does not exist.
+      await this.usersService.get(userId);
     }
 
     const todoEntity = this.dtoFactory.createEntity(data);
-
     const created = await super.create(todoEntity);
 
     return this.get(created.id, [new PopulateOne('user', 'user')]);

@@ -1,5 +1,8 @@
-import mongoose from 'mongoose';
-import { MongoDto, MongoDtoFactory } from 'nestjs-crudify-mongodb';
+import {
+  MongoDto,
+  MongoDtoFactory,
+  parseObjectId,
+} from 'nestjs-crudify-mongodb';
 import { User } from '../database/User.schema';
 
 type UserProperties = {
@@ -52,7 +55,7 @@ export class UserDtoFactory implements MongoDtoFactory<User, UserDto> {
   createEntity(dto: UserDto): User {
     const entity = new User();
 
-    entity._id = new mongoose.Types.ObjectId(dto.id);
+    entity._id = parseObjectId(dto.id);
     entity.name = dto.name;
     entity.email = dto.email;
     entity.password = dto.password;

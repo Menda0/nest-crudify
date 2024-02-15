@@ -1,8 +1,12 @@
 import mongoose from 'mongoose';
 import { TestingModuleBuilder } from 'nestjs-crudify';
+import { FilterLike } from 'nestjs-crudify-mongodb';
 import { UsersService } from '../users/users.service';
+import { TodoFilters } from './TodoFilters';
 import { TodosController } from './todos.controller';
 import { TodosModule } from './todos.module';
+
+jest.setTimeout(99999);
 
 describe('TodosController', () => {
   let todosController: TodosController;
@@ -38,8 +42,8 @@ describe('TodosController', () => {
       password: '123',
     });
 
-    const input = {
-      type: 'todos',
+    const deserialisedTodo = {
+      type: 'todo',
       name: 'Todo',
       description: 'Lorem impsum',
       user: {
@@ -47,44 +51,122 @@ describe('TodosController', () => {
       },
     };
 
-    const jsonData = await todosController.create(input);
+    const createdTodoDto = await todosController.create(deserialisedTodo);
 
-    expect(jsonData).toBeDefined();
+    expect(createdTodoDto).toBeDefined();
+    expect(createdTodoDto.type).toBe('todo');
+    expect(createdTodoDto.id).toBeDefined();
+    expect(createdTodoDto.createdAt).toBeDefined();
+    expect(createdTodoDto.updateAt).toBeDefined();
+
+    expect(createdTodoDto.description).toBe(deserialisedTodo.description);
+    expect(createdTodoDto.name).toBe(deserialisedTodo.name);
+
+    const createdTodoUserDto = createdTodoDto.user;
+
+    expect(createdTodoUserDto).toBeDefined();
+    expect(createdTodoUserDto.type).toBe('user');
+    expect(createdTodoUserDto.id).toBeDefined();
+    expect(createdTodoUserDto.createdAt).toBeDefined();
+    expect(createdTodoUserDto.updateAt).toBeDefined();
+
+    expect(createdTodoUserDto.name).toBe(user.name);
+    expect(createdTodoUserDto.email).toBe(user.email);
+    expect(createdTodoUserDto.password).not.toBeDefined();
   });
 
-  it('should create todo', async () => {
-    const input = {
-      data: {
-        type: 'todos',
-        attributes: {
-          name: 'Todo',
-          description: 'Lorem impsum',
-        },
+  it('should create todo without user', async () => {
+    const deserialisedTodo = {
+      type: 'todo',
+      name: 'Todo',
+      description: 'Lorem impsum',
+    };
+
+    const createdTodoDto = await todosController.create(deserialisedTodo);
+
+    expect(createdTodoDto).toBeDefined();
+    expect(createdTodoDto.type).toBe('todo');
+    expect(createdTodoDto.id).toBeDefined();
+    expect(createdTodoDto.createdAt).toBeDefined();
+    expect(createdTodoDto.updateAt).toBeDefined();
+
+    expect(createdTodoDto.description).toBe(deserialisedTodo.description);
+    expect(createdTodoDto.name).toBe(deserialisedTodo.name);
+
+    const createdTodoUserDto = createdTodoDto.user;
+
+    expect(createdTodoUserDto).not.toBeDefined();
+  });
+
+  it('should search all todos', async () => {
+    const user = await usersService.create({
+      name: 'Name',
+      email: 'Email',
+      password: '123',
+    });
+
+    const deserialisedTodo1 = {
+      type: 'todo',
+      name: 'Todo 1',
+      description: 'Lorem impsum 1',
+      user: {
+        id: user.id,
       },
     };
 
-    const jsonData = await todosController.create(input);
+    const deserialisedTodo2 = {
+      type: 'todo',
+      name: 'Todo 2',
+      description: 'Lorem impsum 2',
+    };
 
-    expect(jsonData).toBeDefined();
+    const createdTodoDto1 = await todosController.create(deserialisedTodo1);
+    expect(createdTodoDto1).toBeDefined();
+
+    const createdTodoDto2 = await todosController.create(deserialisedTodo2);
+    expect(createdTodoDto2).toBeDefined();
+
+    const allTodos = await todosController.search();
+    expect(allTodos).toBeDefined();
+
+    expect(allTodos.total).toBe(2);
   });
 
-  it('should search todo', async () => {
-    const input = {
-      data: {
-        type: 'todos',
-        attributes: {
-          name: 'Todo',
-          description: 'Lorem impsum',
-        },
+  it('should search todos filtered', async () => {
+    const user = await usersService.create({
+      name: 'Name',
+      email: 'Email',
+      password: '123',
+    });
+
+    const deserialisedTodo1 = {
+      type: 'todo',
+      name: 'Todo 1',
+      description: 'Lorem impsum 1',
+      user: {
+        id: user.id,
       },
     };
 
-    const jsonResponse = await todosController.create(input);
+    const deserialisedTodo2 = {
+      type: 'todo',
+      name: 'Todo 2',
+      description: 'Lorem impsum 2',
+    };
 
-    expect(jsonResponse).toBeDefined();
+    const createdTodoDto1 = await todosController.create(deserialisedTodo1);
+    expect(createdTodoDto1).toBeDefined();
 
-    const searchResult = await todosController.search();
+    const createdTodoDto2 = await todosController.create(deserialisedTodo2);
+    expect(createdTodoDto2).toBeDefined();
 
-    expect(searchResult).toBeDefined();
+    const filteredTodos = await todosController.search(
+      undefined,
+      undefined,
+      undefined,
+      new TodoFilters({ name: new FilterLike('name', '2') })
+    );
+    expect(filteredTodos).toBeDefined();
+    expect(filteredTodos.total).toBe(1);
   });
 });

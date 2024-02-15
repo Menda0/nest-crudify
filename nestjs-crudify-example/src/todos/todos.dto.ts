@@ -1,6 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import mongoose from 'mongoose';
-import { MongoDto, MongoDtoFactory } from 'nestjs-crudify-mongodb';
+import {
+  MongoDto,
+  MongoDtoFactory,
+  parseObjectId,
+} from 'nestjs-crudify-mongodb';
 import { Todo } from '../database/Todo.schema';
 import { UserDto, UserDtoFactory } from '../users/users.dto';
 
@@ -55,7 +58,7 @@ export class TodoDtoFactory implements MongoDtoFactory<Todo, TodoDto> {
   createEntity(dto: TodoDto): Todo {
     const entity = new Todo();
 
-    entity._id = new mongoose.Types.ObjectId(dto.id); // Assuming Todo entity has _id property
+    entity._id = parseObjectId(dto.id);
     entity.name = dto.name;
     entity.description = dto.description;
     entity.user = dto.user

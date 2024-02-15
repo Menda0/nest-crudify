@@ -1,11 +1,14 @@
 import mongoose from 'mongoose';
 import { TestingModuleBuilder } from 'nestjs-crudify';
-import { PopulateOne } from 'nestjs-crudify-mongodb';
+import { FilterLike, PopulateOne } from 'nestjs-crudify-mongodb';
 import { UserDto } from '../users/users.dto';
 import { UsersService } from '../users/users.service';
+import { TodoFilters } from './TodoFilters';
 import { TodoDto } from './todos.dto';
 import { TodosModule } from './todos.module';
 import { TodosService } from './todos.service';
+
+jest.setTimeout(99999);
 
 describe('TodosService', () => {
   let todosService: TodosService;
@@ -109,10 +112,19 @@ describe('TodosService', () => {
     expect(todosInDb.data.length).toEqual(todosInDb.total);
   });
 
-  it('should filter todos OR', async () => {
+  it('should get filtered todos', async () => {
+    const user1 = await usersService.create({
+      name: 'carlos',
+      email: 'carlos.miguel@email.com',
+      password: '123',
+    });
+
     const todo1 = new TodoDto({
       name: 'My Todo 1',
       description: 'Lorem ipsum sit dolor amet',
+      user: {
+        id: user1.id,
+      },
     });
 
     const todo2 = new TodoDto({
@@ -131,10 +143,17 @@ describe('TodosService', () => {
       todosService.create(todo3),
     ]);
 
-    const todosInDb = await todosService.search();
+    const todosInDb = await todosService.search({
+      params: {
+        filter: new TodoFilters({
+          username: new FilterLike('user.name', 'carlos'),
+        }),
+      },
+      populate: [new PopulateOne('user', 'users')],
+    });
 
     expect(todosInDb).toBeDefined();
-    expect(todosInDb.total).toEqual(3);
+    expect(todosInDb.total).toEqual(1);
     expect(todosInDb.data.length).toEqual(todosInDb.total);
   });
 

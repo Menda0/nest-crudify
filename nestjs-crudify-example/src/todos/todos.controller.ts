@@ -9,44 +9,16 @@ import {
   Query,
   UseInterceptors,
 } from '@nestjs/common';
-import { Types } from 'mongoose';
 import {
   CommonCrudController,
   JsonApiDeserializerPipe,
   JsonApiSerializeInterceptor,
   Page,
-  SearchFilters,
-  TransformToFilter,
-  parseValues,
 } from 'nestjs-crudify';
-import {
-  FilterLike,
-  FilterMatchIn,
-  FilterOr,
-  MongoController,
-  PopulateOne,
-  parseObjectId,
-} from 'nestjs-crudify-mongodb';
+import { MongoController, PopulateOne } from 'nestjs-crudify-mongodb';
+import { TodoFilters } from './TodoFilters';
 import { TodoDto } from './todos.dto';
 import { TodosService } from './todos.service';
-
-class TodoFilters extends SearchFilters {
-  @TransformToFilter<Types.ObjectId[]>(new FilterMatchIn('_id'), (v) =>
-    parseValues(v, parseObjectId)
-  )
-  id: FilterMatchIn<Types.ObjectId[]>;
-
-  @TransformToFilter<string>(new FilterLike('name'))
-  name: FilterLike;
-
-  @TransformToFilter<string>(new FilterLike('description'))
-  description: FilterLike;
-
-  @TransformToFilter<any>(new FilterOr('descriptionOrName'), (v) => {
-    return [new FilterLike('description', v), new FilterLike('name', v)];
-  })
-  descriptionOrName: FilterOr<any>;
-}
 
 @Controller('todos')
 @UseInterceptors(JsonApiSerializeInterceptor())
@@ -59,7 +31,7 @@ export class TodosController
   }
 
   @Post()
-  create(@Body(new JsonApiDeserializerPipe()) body: any): Promise<any> {
+  create(@Body(new JsonApiDeserializerPipe()) body: any): Promise<TodoDto> {
     return this._create(body);
   }
 
@@ -67,7 +39,7 @@ export class TodosController
   update(
     @Param('id') id: string,
     @Body(new JsonApiDeserializerPipe()) body: any
-  ): Promise<any> {
+  ): Promise<TodoDto> {
     return this._update(id, body);
   }
 
