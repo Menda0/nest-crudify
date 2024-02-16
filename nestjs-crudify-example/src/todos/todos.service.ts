@@ -4,13 +4,13 @@ import { Model } from 'mongoose';
 import { MongoService, PopulateOne } from 'nestjs-crudify-mongodb';
 import { Todo, TodoDocument } from '../database/Todo.schema';
 import { UsersService } from '../users/users.service';
-import { TodoDto, TodoDtoFactory } from './todos.dto';
+import { TodoDto, TodoFactory } from './todos.dto';
 
 @Injectable()
 export class TodosService extends MongoService<Todo, TodoDto> {
   constructor(
     @InjectModel(Todo.name) readonly repository: Model<TodoDocument>,
-    factory: TodoDtoFactory,
+    factory: TodoFactory,
 
     private readonly usersService: UsersService
   ) {
@@ -25,7 +25,7 @@ export class TodosService extends MongoService<Todo, TodoDto> {
       await this.usersService.get(userId);
     }
 
-    const todoEntity = this.dtoFactory.createEntity(data);
+    const todoEntity = this.factory.createEntity(data);
     const created = await super.create(todoEntity);
 
     return this.get(created.id, [new PopulateOne('user', 'user')]);

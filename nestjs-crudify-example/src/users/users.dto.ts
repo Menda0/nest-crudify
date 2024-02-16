@@ -1,8 +1,4 @@
-import {
-  MongoDto,
-  MongoDtoFactory,
-  parseObjectId,
-} from 'nestjs-crudify-mongodb';
+import { MongoDto, MongoFactory, parseObjectId } from 'nestjs-crudify-mongodb';
 import { User } from '../database/User.schema';
 
 type UserProperties = {
@@ -40,8 +36,8 @@ export class UserDto extends MongoDto {
   }
 }
 
-export class UserDtoFactory implements MongoDtoFactory<User, UserDto> {
-  create(e: User): UserDto {
+export class UserDtoFactory implements MongoFactory<User, UserDto> {
+  createDto(e: User): UserDto {
     return new UserDto({
       id: String(e?._id),
       name: e?.name,

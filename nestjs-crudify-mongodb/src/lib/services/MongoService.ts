@@ -8,7 +8,7 @@ import {
   SearchResponse,
 } from 'nestjs-crudify';
 import { MongoAggsBuilder } from './MongoAggsBuilder';
-import { MongoDto, MongoDtoFactory } from './MongoDto';
+import { MongoDto, MongoFactory } from './MongoDto';
 
 export class PopulateOne extends PopulateOptions {
   constructor(from: string, type: string) {
@@ -60,7 +60,7 @@ export class MongoService<Entity, Dto extends MongoDto>
 {
   constructor(
     protected readonly repository: Model<Entity>,
-    protected readonly dtoFactory: MongoDtoFactory<Entity, Dto>
+    protected readonly factory: MongoFactory<Entity, Dto>
   ) {}
 
   private async count(operation: any) {
@@ -75,7 +75,7 @@ export class MongoService<Entity, Dto extends MongoDto>
 
     const entity = await this.repository.create(data);
 
-    return this.dtoFactory.create(entity);
+    return this.factory.createDto(entity);
   }
 
   async search(options?: {
@@ -127,7 +127,7 @@ export class MongoService<Entity, Dto extends MongoDto>
       searchOpearation,
     ]);
 
-    const data = result.map((e) => this.dtoFactory.create(e));
+    const data = result.map((e) => this.factory.createDto(e));
 
     return new SearchResponse(data, total, params?.page);
   }
@@ -140,7 +140,7 @@ export class MongoService<Entity, Dto extends MongoDto>
     const entity = (await query.exec()) as Entity;
 
     if (entity) {
-      return this.dtoFactory.create(entity);
+      return this.factory.createDto(entity);
     } else {
       throw new EntityNotFoundException(this.repository.modelName, id);
     }

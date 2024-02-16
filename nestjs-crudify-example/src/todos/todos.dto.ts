@@ -1,9 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import {
-  MongoDto,
-  MongoDtoFactory,
-  parseObjectId,
-} from 'nestjs-crudify-mongodb';
+import { MongoDto, MongoFactory, parseObjectId } from 'nestjs-crudify-mongodb';
 import { Todo } from '../database/Todo.schema';
 import { UserDto, UserDtoFactory } from '../users/users.dto';
 
@@ -41,15 +37,15 @@ export class TodoDto extends MongoDto {
   }
 }
 @Injectable()
-export class TodoDtoFactory implements MongoDtoFactory<Todo, TodoDto> {
+export class TodoFactory implements MongoFactory<Todo, TodoDto> {
   constructor(private userDtoFactory: UserDtoFactory) {}
 
-  create(e: Todo): TodoDto {
+  createDto(e: Todo): TodoDto {
     return new TodoDto({
       id: String(e._id),
       name: e.name,
       description: e.description,
-      user: e.user ? this.userDtoFactory.create(e.user) : undefined,
+      user: e.user ? this.userDtoFactory.createDto(e.user) : undefined,
       createdAt: e.createdAt,
       updateAt: e.updatedAt,
     });

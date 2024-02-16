@@ -1,4 +1,4 @@
-import { CommonDto, DtoFactory } from 'nestjs-crudify';
+import { CommonDto, Factory } from 'nestjs-crudify';
 
 export class MongoDto extends CommonDto<string> {
   constructor(type: string, relationshipNames?: Array<string>) {
@@ -6,8 +6,5 @@ export class MongoDto extends CommonDto<string> {
   }
 }
 
-export interface MongoDtoFactory<Entity, Dto extends MongoDto>
-  extends DtoFactory<Entity, string, Dto> {
-  create(e: Entity): Dto;
-  createEntity(dto: Dto): Entity;
-}
+export interface MongoFactory<Entity, Dto extends MongoDto>
+  extends Factory<Entity, string, Dto> {}
