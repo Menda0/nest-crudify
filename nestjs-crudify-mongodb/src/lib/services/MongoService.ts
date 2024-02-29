@@ -10,9 +10,16 @@ import {
 import { MongoAggsBuilder } from './MongoAggsBuilder';
 import { MongoDto, MongoFactory } from './MongoDto';
 
+type TPopulateOptions = {
+  from: string;
+  localField: string;
+  fk?: string;
+  as?: string;
+};
+
 export class PopulateOne extends PopulateOptions {
-  constructor(from: string, type: string) {
-    super(from, type, '_id', from, RelationType.ONE);
+  constructor({ from, localField, fk = '_id', as }: TPopulateOptions) {
+    super(from, localField, fk, as ?? localField, RelationType.ONE);
   }
 
   override getOperations(): any[] {
@@ -28,7 +35,6 @@ export class PopulateOne extends PopulateOptions {
       {
         $unwind: {
           path: `$${this.localField}`,
-          includeArrayIndex: 'id',
           preserveNullAndEmptyArrays: true,
         },
       },
@@ -37,8 +43,8 @@ export class PopulateOne extends PopulateOptions {
 }
 
 export class PopulateMany extends PopulateOptions {
-  constructor(from: string, type: string) {
-    super(from, type, '_id', from, RelationType.MANY);
+  constructor({ from, localField, fk = '_id', as }: TPopulateOptions) {
+    super(from, localField, fk, as ?? localField, RelationType.MANY);
   }
 
   override getOperations(): any[] {
