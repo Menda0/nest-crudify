@@ -149,6 +149,10 @@ export class MongoService<Entity, Dto extends MongoDto>
   async delete(id: string) {
     const entity = this.get(id);
 
+    if (!entity) {
+      throw new EntityNotFoundException(this.repository.modelName, id);
+    }
+
     await this.repository
       .deleteOne({
         _id: new Types.ObjectId(id),
