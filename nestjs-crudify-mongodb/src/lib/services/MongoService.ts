@@ -12,7 +12,7 @@ import { MongoDto, MongoFactory } from './MongoDto';
 
 export class PopulateOne extends PopulateOptions {
   constructor(from: string, type: string) {
-    super(type, from, '_id', from, RelationType.ONE);
+    super(from, type, '_id', from, RelationType.ONE);
   }
 
   override getOperations(): any[] {
@@ -38,7 +38,7 @@ export class PopulateOne extends PopulateOptions {
 
 export class PopulateMany extends PopulateOptions {
   constructor(from: string, type: string) {
-    super(type, from, '_id', from, RelationType.MANY);
+    super(from, type, '_id', from, RelationType.MANY);
   }
 
   override getOperations(): any[] {
