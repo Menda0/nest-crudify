@@ -168,10 +168,10 @@ export class MongoService<Entity, Dto extends MongoDto>
     return entity;
   }
 
-  async update(id: string, data: any) {
+  async update(id: string, data: any, options?: any) {
     if (id) {
       await this.repository
-        .findByIdAndUpdate(new Types.ObjectId(id), { ...data })
+        .findByIdAndUpdate(new Types.ObjectId(id), { ...data }, options)
         .exec();
       return this.get(id);
     } else {

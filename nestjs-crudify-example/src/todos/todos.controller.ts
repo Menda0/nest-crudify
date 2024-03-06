@@ -45,7 +45,9 @@ export class TodosController
 
   @Get(':id')
   get(@Param('id') id: string) {
-    return this.todosService.get(id, [new PopulateOne('user', 'users')]);
+    return this.todosService.get(id, [
+      new PopulateOne({ localField: 'user', from: 'user' }),
+    ]);
   }
 
   @Get()
@@ -56,7 +58,7 @@ export class TodosController
     @Query('filter') filter?: TodoFilters
   ) {
     return this._search(sort, search, page, filter, [
-      new PopulateOne('user', 'users'),
+      new PopulateOne({ localField: 'user', from: 'user' }),
     ]);
   }
 

@@ -1,5 +1,4 @@
 import {
-  ArgumentMetadata,
   CallHandler,
   ExecutionContext,
   NestInterceptor,
@@ -50,9 +49,13 @@ class JsonSerializer extends Jsona {
 }
 
 export class JsonApiDeserializerPipe<Dto> implements PipeTransform<any, Dto> {
-  private readonly jsonaDeserializer = new Jsona();
+  private readonly jsonaDeserializer;
 
-  transform(value: any, metadata: ArgumentMetadata) {
+  constructor() {
+    this.jsonaDeserializer = new Jsona();
+  }
+
+  transform(value: any) {
     return this.jsonaDeserializer.deserialize(value) as Dto;
   }
 }

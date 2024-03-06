@@ -68,7 +68,7 @@ export class UsersController
     @Query('filter') filter?: UserFilters
   ) {
     return this._search(sort, search, page, filter, [
-      new PopulateMany('todos', 'todos'),
+      new PopulateMany({ localField: 'todos', from: 'todo' }),
     ]);
   }
 }

@@ -72,7 +72,7 @@ describe('TodosService', () => {
     await todosService.create(todo);
 
     const res = await todosService.search({
-      populate: [new PopulateOne('user', 'users')],
+      populate: [new PopulateOne({ localField: 'user', from: 'user' })],
     });
 
     expect(res).toBeDefined();
@@ -149,7 +149,7 @@ describe('TodosService', () => {
           username: new FilterLike('user.name', 'carlos'),
         }),
       },
-      populate: [new PopulateOne('user', 'users')],
+      populate: [new PopulateOne({ localField: 'user', from: 'users' })],
     });
 
     expect(todosInDb).toBeDefined();

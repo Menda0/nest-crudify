@@ -28,6 +28,8 @@ export class TodosService extends MongoService<Todo, TodoDto> {
     const todoEntity = this.factory.createEntity(data);
     const created = await super.create(todoEntity);
 
-    return this.get(created.id, [new PopulateOne('user', 'user')]);
+    return this.get(created.id, [
+      new PopulateOne({ localField: 'user', from: 'user' }),
+    ]);
   }
 }
