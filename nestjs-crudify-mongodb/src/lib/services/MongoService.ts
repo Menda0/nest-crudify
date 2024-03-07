@@ -1,4 +1,3 @@
-import { Logger } from '@nestjs/common';
 import { Model, Types } from 'mongoose';
 import {
   CommonService,
@@ -65,8 +64,6 @@ export class PopulateMany extends PopulateOptions {
 export class MongoService<Entity, Dto extends MongoDto>
   implements CommonService<string, Dto>
 {
-  private readonly logger = new Logger();
-
   constructor(
     protected readonly repository: Model<Entity>,
     protected readonly factory: MongoFactory<Entity, Dto>
@@ -131,7 +128,7 @@ export class MongoService<Entity, Dto extends MongoDto>
       } else if (offset != undefined && limit != undefined) {
         operation.withOffset(offset).withLimit(limit);
       } else {
-        this.logger.warn(
+        console.warn(
           'Please provide a valid combination for pagination. Either number/size OR offset/limit'
         );
         operation.withStep({
