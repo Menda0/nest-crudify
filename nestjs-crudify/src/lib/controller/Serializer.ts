@@ -31,12 +31,16 @@ class JsonSerializer extends Jsona {
       | TJsonaNormalizedIncludeNamesTree;
   }): any {
     if (stuff instanceof SearchResponse) {
-      const { data, page, total } = stuff;
+      const { data, page, total, ids } = stuff;
+
       const meta = {
         totalPages: total,
-        currentPage: page?.number,
-        pageSize: page?.size,
+        total,
+        ids,
+        currentPage: page?.number ?? page?.offset,
+        pageSize: page?.size ?? page?.limit,
       };
+
       const serializedData = super.serialize({ stuff: data, includeNames });
       return {
         ...serializedData,

@@ -133,6 +133,8 @@ describe('TodosController', () => {
 
     expect(allTodos.data).toBeDefined();
     expect(allTodos.data).toHaveLength(2);
+
+    console.log(allTodos);
   });
 
   it('should search paginated todos - offset/limit', async () => {

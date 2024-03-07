@@ -76,6 +76,16 @@ export class MongoService<Entity, Dto extends MongoDto>
     return count;
   }
 
+  private async ids(operation: any) {
+    const results = await this.repository
+      .aggregate([...operation, { $project: { _id: 1 } }], {
+        allowDiskUse: true,
+      })
+      .exec();
+
+    return results.map((doc) => doc._id.toString());
+  }
+
   async create(data: Omit<Entity, '_id' | 'createdAt' | 'updatedAt'>) {
     data = { ...data, id: undefined };
 
@@ -106,6 +116,7 @@ export class MongoService<Entity, Dto extends MongoDto>
       }
     }
 
+    const idsOperation = this.ids(operation.build());
     const countOperation = this.count(operation.build());
 
     if (params?.sort) {
@@ -143,14 +154,15 @@ export class MongoService<Entity, Dto extends MongoDto>
       .aggregate<Entity>(operation.build())
       .exec();
 
-    const [total, result] = await Promise.all([
+    const [total, ids, result] = await Promise.all([
       countOperation,
+      idsOperation,
       searchOperation,
     ]);
 
     const data = result.map((e) => this.factory.createDto(e));
 
-    return new SearchResponse(data, total, params?.page);
+    return new SearchResponse<string, Dto>(data, total, params?.page, ids);
   }
 
   async get(id: string, populate?: PopulateOptions[]) {

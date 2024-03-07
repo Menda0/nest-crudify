@@ -21,11 +21,13 @@ export class SearchResponse<Id, Dto> {
   data: Dto[];
   total: number;
   page?: Page;
+  ids?: Id[];
 
-  constructor(data: Dto[], total: number, page?: Page) {
+  constructor(data: Dto[], total: number, page?: Page, ids?: Id[]) {
     this.data = data;
     this.total = total;
     this.page = page;
+    this.ids = ids;
   }
 }
 
