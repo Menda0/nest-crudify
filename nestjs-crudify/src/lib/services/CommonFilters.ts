@@ -53,10 +53,15 @@ export abstract class SearchFilters {
 }
 
 export class Page {
-  @TransformToNumber()
-  number!: number;
-  @TransformToNumber()
-  size!: number;
+  @TransformToNumber(1)
+  number?: number;
+  @TransformToNumber(10)
+  size?: number;
+
+  @TransformToNumber(0)
+  offset?: number;
+  @TransformToNumber(10)
+  limit?: number;
 }
 
 export type SearchParams = {

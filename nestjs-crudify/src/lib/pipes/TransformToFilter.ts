@@ -16,12 +16,6 @@ export const TransformToFilter = <T>(
       filter.setValue(value);
     }
 
-    /** 
-     * filter[aOrb]=carlos
-     * 
-     * 
-    */
-
     return filter;
   });
 };

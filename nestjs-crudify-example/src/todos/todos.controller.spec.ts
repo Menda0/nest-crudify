@@ -127,9 +127,130 @@ describe('TodosController', () => {
     expect(createdTodoDto2).toBeDefined();
 
     const allTodos = await todosController.search();
-    expect(allTodos).toBeDefined();
 
+    expect(allTodos).toBeDefined();
     expect(allTodos.total).toBe(2);
+
+    expect(allTodos.data).toBeDefined();
+    expect(allTodos.data).toHaveLength(2);
+  });
+
+  it('should search paginated todos - offset/limit', async () => {
+    const user = await usersService.create({
+      name: 'Name',
+      email: 'Email',
+      password: '123',
+    });
+
+    const deserialisedTodo1 = {
+      type: 'todo',
+      name: 'Todo 1',
+      description: 'Lorem impsum 1',
+      user: {
+        id: user.id,
+      },
+    };
+
+    const deserialisedTodo2 = {
+      type: 'todo',
+      name: 'Todo 2',
+      description: 'Lorem impsum 2',
+    };
+
+    const createdTodoDto1 = await todosController.create(deserialisedTodo1);
+    expect(createdTodoDto1).toBeDefined();
+
+    const createdTodoDto2 = await todosController.create(deserialisedTodo2);
+    expect(createdTodoDto2).toBeDefined();
+
+    const allTodos = await todosController.search(undefined, undefined, {
+      offset: 0,
+      limit: 1,
+    });
+
+    expect(allTodos).toBeDefined();
+    expect(allTodos.total).toBe(2);
+
+    expect(allTodos.data).toBeDefined();
+    expect(allTodos.data).toHaveLength(1);
+  });
+
+  it('should search paginated todos - number/size', async () => {
+    const user = await usersService.create({
+      name: 'Name',
+      email: 'Email',
+      password: '123',
+    });
+
+    const deserialisedTodo1 = {
+      type: 'todo',
+      name: 'Todo 1',
+      description: 'Lorem impsum 1',
+      user: {
+        id: user.id,
+      },
+    };
+
+    const deserialisedTodo2 = {
+      type: 'todo',
+      name: 'Todo 2',
+      description: 'Lorem impsum 2',
+    };
+
+    const createdTodoDto1 = await todosController.create(deserialisedTodo1);
+    expect(createdTodoDto1).toBeDefined();
+
+    const createdTodoDto2 = await todosController.create(deserialisedTodo2);
+    expect(createdTodoDto2).toBeDefined();
+
+    const allTodos = await todosController.search(undefined, undefined, {
+      number: 1,
+      size: 1,
+    });
+
+    expect(allTodos).toBeDefined();
+    expect(allTodos.total).toBe(2);
+
+    expect(allTodos.data).toBeDefined();
+    expect(allTodos.data).toHaveLength(1);
+  });
+
+  it('should NOT search paginated todos - bad combination', async () => {
+    const user = await usersService.create({
+      name: 'Name',
+      email: 'Email',
+      password: '123',
+    });
+
+    const deserialisedTodo1 = {
+      type: 'todo',
+      name: 'Todo 1',
+      description: 'Lorem impsum 1',
+      user: {
+        id: user.id,
+      },
+    };
+
+    const deserialisedTodo2 = {
+      type: 'todo',
+      name: 'Todo 2',
+      description: 'Lorem impsum 2',
+    };
+
+    const createdTodoDto1 = await todosController.create(deserialisedTodo1);
+    expect(createdTodoDto1).toBeDefined();
+
+    const createdTodoDto2 = await todosController.create(deserialisedTodo2);
+    expect(createdTodoDto2).toBeDefined();
+
+    const allTodos = await todosController.search(undefined, undefined, {
+      number: 1,
+      limit: 1,
+    });
+
+    expect(allTodos).toBeDefined();
+    expect(allTodos.data).toBeDefined();
+    expect(allTodos.data).toHaveLength(0);
   });
 
   it('should search todos filtered', async () => {

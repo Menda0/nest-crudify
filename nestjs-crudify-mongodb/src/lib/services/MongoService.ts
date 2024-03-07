@@ -1,3 +1,4 @@
+import { Logger } from '@nestjs/common';
 import { Model, Types } from 'mongoose';
 import {
   CommonService,
@@ -64,6 +65,8 @@ export class PopulateMany extends PopulateOptions {
 export class MongoService<Entity, Dto extends MongoDto>
   implements CommonService<string, Dto>
 {
+  private readonly logger = new Logger();
+
   constructor(
     protected readonly repository: Model<Entity>,
     protected readonly factory: MongoFactory<Entity, Dto>
@@ -113,24 +116,39 @@ export class MongoService<Entity, Dto extends MongoDto>
     }
 
     if (
-      params?.page &&
-      params.page.number != undefined &&
-      params.page.size != undefined
+      params?.page?.number != undefined ||
+      params?.page?.size != undefined ||
+      params?.page?.offset != undefined ||
+      params?.page?.limit != undefined
     ) {
-      const { number, size } = params.page;
-      const limit = size;
-      const offset = (number - 1) * limit;
+      const { number, size, offset, limit } = params.page;
 
-      operation.withOffset(offset).withLimit(limit);
+      if (number != undefined && size != undefined) {
+        const limit = size;
+        const offset = (number - 1) * limit;
+
+        operation.withOffset(offset).withLimit(limit);
+      } else if (offset != undefined && limit != undefined) {
+        operation.withOffset(offset).withLimit(limit);
+      } else {
+        this.logger.warn(
+          'Please provide a valid combination for pagination. Either number/size OR offset/limit'
+        );
+        operation.withStep({
+          $match: {
+            _id: null, // * Assuming no document in your collection has _id set to null
+          },
+        });
+      }
     }
 
-    const searchOpearation = this.repository
+    const searchOperation = this.repository
       .aggregate<Entity>(operation.build())
       .exec();
 
     const [total, result] = await Promise.all([
       countOperation,
-      searchOpearation,
+      searchOperation,
     ]);
 
     const data = result.map((e) => this.factory.createDto(e));

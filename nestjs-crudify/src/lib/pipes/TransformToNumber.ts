@@ -1,5 +1,5 @@
-import {Transform} from 'class-transformer';
+import { Transform } from 'class-transformer';
 
-export const TransformToNumber = () => {
-  return Transform(({ value }) => parseInt(value, 10))
-}
+export const TransformToNumber = (defaultValue = 10) => {
+  return Transform(({ value }) => parseInt(value, defaultValue));
+};
