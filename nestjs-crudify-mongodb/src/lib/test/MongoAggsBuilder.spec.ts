@@ -149,7 +149,6 @@ describe('Testing MongoAggsBuilder', () => {
     expect(query).toEqual(expectedResult);
   });
 
-  // TODO[cami]: Check
   it('should build query from search params', () => {
     const builder = new MongoAggsBuilder();
 

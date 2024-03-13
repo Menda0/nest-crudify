@@ -3,6 +3,7 @@ import { SearchFilters, TransformToFilter, parseValues } from 'nestjs-crudify';
 import {
   FilterLike,
   FilterMatchIn,
+  FilterOr,
   parseObjectId,
 } from 'nestjs-crudify-mongodb';
 
@@ -35,4 +36,16 @@ export class TodoFilters extends SearchFilters {
   description?: FilterLike;
   @TransformToFilter<string>(new FilterLike('user.name'))
   username?: FilterLike;
+}
+
+export class TodoSearch extends SearchFilters {
+  constructor({ nameOrDescription }: { nameOrDescription?: FilterOr<any> }) {
+    super();
+    this.nameOrDescription = nameOrDescription;
+  }
+
+  @TransformToFilter<any>(new FilterOr('nameOrDescription'), (v) => {
+    return [new FilterLike('name', v), new FilterLike('description', v)];
+  })
+  nameOrDescription?: FilterOr<any>;
 }

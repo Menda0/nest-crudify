@@ -67,6 +67,6 @@ export class Page {
 export type SearchParams = {
   page?: Page;
   sort?: string;
-  search?: string;
+  search?: SearchFilters;
   filter?: SearchFilters;
 };

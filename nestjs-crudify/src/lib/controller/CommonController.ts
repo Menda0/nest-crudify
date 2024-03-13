@@ -24,7 +24,7 @@ export class CommonController<
 
   async _search(
     sort?: string,
-    search?: string,
+    search?: SearchFilters,
     page?: Page,
     filter?: SearchFilters,
     populate?: PopulateOptions[]

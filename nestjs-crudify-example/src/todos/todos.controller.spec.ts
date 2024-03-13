@@ -2,8 +2,8 @@ import mongoose from 'mongoose';
 import { TestingModuleBuilder } from 'nestjs-crudify';
 import { FilterLike } from 'nestjs-crudify-mongodb';
 import { UsersService } from '../users/users.service';
-import { TodoFilters } from './TodoFilters';
 import { TodosController } from './todos.controller';
+import { TodoFilters } from './todos.filters';
 import { TodosModule } from './todos.module';
 
 jest.setTimeout(99999);

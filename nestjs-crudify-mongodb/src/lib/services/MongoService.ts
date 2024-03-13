@@ -102,27 +102,37 @@ export class MongoService<Entity, Dto extends MongoDto>
 
     const operation = new MongoAggsBuilder();
 
+    // * If defined, adds populate operations to the pipepline.
     for (const relation of populate) {
       operation.withPopulate(relation);
     }
 
-    const filters = params?.filter?.getIterator();
+    // * If defined, adds search filter operations to the pipepline.
+    const searchIterator = params?.search?.getIterator();
 
-    while (filters?.hasNext()) {
-      const filter = filters?.next();
+    while (searchIterator && searchIterator.hasNext()) {
+      const filter = searchIterator.next();
 
-      if (filter) {
-        operation.withFilter(filter);
-      }
+      if (filter) operation.withFilter(filter);
     }
 
+    // * If defined, adds filter operations to the pipepline.
+    const filtersIterator = params?.filter?.getIterator();
+
+    while (filtersIterator && filtersIterator.hasNext()) {
+      const filter = filtersIterator.next();
+
+      if (filter) operation.withFilter(filter);
+    }
+
+    // * Metadata operations
     const idsOperation = this.ids(operation.build());
     const countOperation = this.count(operation.build());
 
-    if (params?.sort) {
-      operation.withSort(params?.sort);
-    }
+    // * If defined, adds sort operations to the pipepline.
+    if (params?.sort) operation.withSort(params?.sort);
 
+    // * If defined, adds pagination operations to the pipepline.
     if (
       params?.page?.number != undefined ||
       params?.page?.size != undefined ||

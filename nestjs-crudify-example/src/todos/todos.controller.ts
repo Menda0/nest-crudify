@@ -16,8 +16,8 @@ import {
   Page,
 } from 'nestjs-crudify';
 import { MongoController, PopulateOne } from 'nestjs-crudify-mongodb';
-import { TodoFilters } from './TodoFilters';
 import { TodoDto } from './todos.dto';
+import { TodoFilters, TodoSearch } from './todos.filters';
 import { TodosService } from './todos.service';
 
 @Controller('todos')
@@ -53,7 +53,7 @@ export class TodosController
   @Get()
   search(
     @Query('sort') sort?: string,
-    @Query('search') search?: string,
+    @Query('search') search?: TodoSearch,
     @Query('page') page?: Page,
     @Query('filter') filter?: TodoFilters
   ) {
