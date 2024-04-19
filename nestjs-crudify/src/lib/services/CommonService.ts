@@ -36,7 +36,7 @@ type SearchOptions = {
   populate?: PopulateOptions[];
 };
 
-export interface CommonService<Id, DTO extends CommonDto<Id>> {
+export interface CommonService<Id, DTO extends CommonDto> {
   search(options?: SearchOptions): Promise<SearchResponse<Id, DTO>>;
   create(data: any): Promise<DTO>;
   get(id: string, populate?: PopulateOptions[]): Promise<DTO>;

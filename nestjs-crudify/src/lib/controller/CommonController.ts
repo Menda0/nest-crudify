@@ -9,7 +9,7 @@ import {
 
 export class CommonController<
   Id,
-  Dto extends CommonDto<Id>,
+  Dto extends CommonDto,
   Service extends CommonService<Id, Dto>
 > {
   constructor(protected service: Service) {}
@@ -44,6 +44,6 @@ export class CommonController<
   }
 }
 
-export interface CommonCrudController<Dto extends CommonDto<any>> {
+export interface CommonCrudController<Dto extends CommonDto> {
   create(body: Dto): Promise<Dto>;
 }

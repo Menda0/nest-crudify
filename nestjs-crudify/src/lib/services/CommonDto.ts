@@ -1,9 +1,8 @@
-export interface Factory<Entity, ID, Dto extends CommonDto<ID>> {
-  createDto(entity: Entity): Dto;
-  createEntity(dto: Dto): Entity;
+
+export interface Factory<Entity, Dto extends CommonDto>{
+  create(entity: Entity): Dto;
 }
 
-export class CommonDto<T> {
-  public id?: T;
+export class CommonDto {
   constructor(public type?: string, public relationshipNames?: Array<string>) {}
 }

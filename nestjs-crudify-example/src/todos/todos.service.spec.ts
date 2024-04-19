@@ -1,9 +1,7 @@
-import mongoose from 'mongoose';
+import mongoose, { Types} from 'mongoose';
 import { TestingModuleBuilder } from 'nestjs-crudify';
 import { FilterLike, FilterOr, PopulateOne } from 'nestjs-crudify-mongodb';
-import { UserDto } from '../users/users.dto';
 import { UsersService } from '../users/users.service';
-import { TodoDto } from './todos.dto';
 import { TodoFilters, TodoSearch } from './todos.filters';
 import { TodosModule } from './todos.module';
 import { TodosService } from './todos.service';
@@ -44,13 +42,11 @@ describe('TodosService', () => {
       password: '-1',
     });
 
-    const todo = new TodoDto({
+    const todo = {
       name: 'My Todo',
       description: 'Lorem ipsum sit dolor amet',
-      user: new UserDto({
-        id: userInDb.id,
-      }),
-    });
+      user: new Types.ObjectId(userInDb.id),
+    };
 
     const todoInDb = await todosService.create(todo);
 
@@ -63,26 +59,35 @@ describe('TodosService', () => {
   });
 
   it('should search todo with populated user', async () => {
-    const todo = new TodoDto({
-      name: 'My Todo',
-      description: 'Lorem ipsum sit dolor amet',
-      user: new UserDto({ name: 'Name', email: 'Email' }),
+    const userInDb = await usersService.create({
+      name: 'a',
+      email: 'b',
+      password: '-1',
     });
 
-    await todosService.create(todo);
+    const todo = {
+      name: 'My Todo',
+      description: 'Lorem ipsum sit dolor amet',
+      user: new Types.ObjectId(userInDb.id),
+    };
+
+    const adddedTodo = await todosService.create(todo);
+
+    expect(adddedTodo.user).toBeDefined()
 
     const res = await todosService.search({
-      populate: [new PopulateOne({ localField: 'user', from: 'user' })],
+      populate: [new PopulateOne({ localField: 'user', from: 'users' })],
     });
 
     expect(res).toBeDefined();
+    expect(res.data[0].user).toBeDefined();
   });
 
   it('should add todo', async () => {
-    const todo = new TodoDto({
+    const todo = {
       name: 'My Todo',
       description: 'Lorem ipsum sit dolor amet',
-    });
+    };
 
     const todoInDb = await todosService.create(todo);
 
@@ -94,10 +99,10 @@ describe('TodosService', () => {
   });
 
   it('should list all todos', async () => {
-    const todo = new TodoDto({
+    const todo = {
       name: 'My Todo',
       description: 'Lorem ipsum sit dolor amet',
-    });
+    };
 
     await Promise.all([
       todosService.create(todo),
@@ -113,10 +118,10 @@ describe('TodosService', () => {
   });
 
   it('should search todos', async () => {
-    const todo = new TodoDto({
+    const todo = {
       name: 'My Todo',
       description: 'Lorem ipsum sit dolor amet.',
-    });
+    };
 
     const promises = [];
 
@@ -155,23 +160,21 @@ describe('TodosService', () => {
       password: '123',
     });
 
-    const todo1 = new TodoDto({
+    const todo1 = {
       name: 'My Todo 1',
       description: 'Lorem ipsum sit dolor amet',
-      user: {
-        id: user1.id,
-      },
-    });
+      user:  new Types.ObjectId(user1.id),
+    };
 
-    const todo2 = new TodoDto({
+    const todo2 = {
       name: 'My Todo 2',
       description: 'Lorem ipsum sit dolor amet',
-    });
+    };
 
-    const todo3 = new TodoDto({
+    const todo3 = {
       name: 'My Todo 3',
       description: 'Lorem ipsum sit dolor amet',
-    });
+    };
 
     await Promise.all([
       todosService.create(todo1),
@@ -194,10 +197,10 @@ describe('TodosService', () => {
   });
 
   it('should get todo by id', async () => {
-    const todo = new TodoDto({
+    const todo = {
       name: 'My Todo',
       description: 'Lorem ipsum sit dolor amet',
-    });
+    };
 
     const addedTodo = await todosService.create(todo);
     expect(addedTodo).toBeDefined();
@@ -209,16 +212,16 @@ describe('TodosService', () => {
   });
 
   it('should update todo', async () => {
-    const todo = new TodoDto({
+    const todo = {
       name: 'My Todo',
       description: 'Lorem ipsum sit dolor amet',
-    });
+    };
 
     const addedTodo = await todosService.create(todo);
     expect(addedTodo).toBeDefined();
     expect(addedTodo.id).toBeDefined();
     expect(addedTodo.createdAt).toBeDefined();
-    expect(addedTodo.updateAt).toBeDefined();
+    expect(addedTodo.updatedAt).toBeDefined();
 
     addedTodo.name = 'Updated todo';
 
@@ -228,8 +231,8 @@ describe('TodosService', () => {
     expect(updateTodo.id).toBeDefined();
     expect(updateTodo.id).toEqual(addedTodo.id);
     expect(updateTodo.createdAt).toBeDefined();
-    expect(updateTodo.updateAt).toBeDefined();
+    expect(updateTodo.updatedAt).toBeDefined();
     expect(updateTodo.createdAt).toEqual(addedTodo.createdAt);
-    expect(updateTodo.updateAt).not.toEqual(addedTodo.updateAt);
+    expect(updateTodo.updatedAt).not.toEqual(addedTodo.updatedAt);
   });
 });

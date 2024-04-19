@@ -91,7 +91,7 @@ export class MongoService<Entity, Dto extends MongoDto>
 
     const entity = await this.repository.create(data);
 
-    return this.factory.createDto(entity);
+    return this.factory.create(entity);
   }
 
   async search(options?: {
@@ -170,7 +170,7 @@ export class MongoService<Entity, Dto extends MongoDto>
       searchOperation,
     ]);
 
-    const data = result.map((e) => this.factory.createDto(e));
+    const data = result.map((e) => this.factory.create(e));
 
     return new SearchResponse<string, Dto>(data, total, params?.page, ids);
   }
@@ -183,7 +183,7 @@ export class MongoService<Entity, Dto extends MongoDto>
     const entity = (await query.exec()) as Entity;
 
     if (entity) {
-      return this.factory.createDto(entity);
+      return this.factory.create(entity);
     } else {
       throw new EntityNotFoundException(this.repository.modelName, id);
     }

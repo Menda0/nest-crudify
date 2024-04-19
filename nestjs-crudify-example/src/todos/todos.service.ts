@@ -17,7 +17,7 @@ export class TodosService extends MongoService<Todo, TodoDto> {
     super(repository, factory);
   }
 
-  override async create(data: TodoDto): Promise<TodoDto> {
+  override async create(data: any): Promise<TodoDto> {
     const userId = data?.user?.id;
 
     if (userId) {
@@ -25,8 +25,7 @@ export class TodosService extends MongoService<Todo, TodoDto> {
       await this.usersService.get(userId);
     }
 
-    const todoEntity = this.factory.createEntity(data);
-    const created = await super.create(todoEntity);
+    const created = await super.create(data);
 
     return this.get(created.id, [
       new PopulateOne({ localField: 'user', from: 'user' }),
