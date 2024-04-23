@@ -57,7 +57,7 @@ describe('TodosController', () => {
     expect(createdTodoDto.type).toBe('todo');
     expect(createdTodoDto.id).toBeDefined();
     expect(createdTodoDto.createdAt).toBeDefined();
-    expect(createdTodoDto.updateAt).toBeDefined();
+    expect(createdTodoDto.updatedAt).toBeDefined();
 
     expect(createdTodoDto.description).toBe(deserialisedTodo.description);
     expect(createdTodoDto.name).toBe(deserialisedTodo.name);
@@ -68,7 +68,7 @@ describe('TodosController', () => {
     expect(createdTodoUserDto.type).toBe('user');
     expect(createdTodoUserDto.id).toBeDefined();
     expect(createdTodoUserDto.createdAt).toBeDefined();
-    expect(createdTodoUserDto.updateAt).toBeDefined();
+    expect(createdTodoUserDto.updatedAt).toBeDefined();
 
     expect(createdTodoUserDto.name).toBe(user.name);
     expect(createdTodoUserDto.email).toBe(user.email);
@@ -88,7 +88,7 @@ describe('TodosController', () => {
     expect(createdTodoDto.type).toBe('todo');
     expect(createdTodoDto.id).toBeDefined();
     expect(createdTodoDto.createdAt).toBeDefined();
-    expect(createdTodoDto.updateAt).toBeDefined();
+    expect(createdTodoDto.updatedAt).toBeDefined();
 
     expect(createdTodoDto.description).toBe(deserialisedTodo.description);
     expect(createdTodoDto.name).toBe(deserialisedTodo.name);

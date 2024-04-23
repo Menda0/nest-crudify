@@ -1,6 +1,6 @@
+import { Expose } from 'class-transformer';
 import { MongoDto, MongoFactory } from 'nestjs-crudify-mongodb';
 import { User } from '../database/User.schema';
-import {Expose} from 'class-transformer';
 
 export class UserDto extends MongoDto {
   @Expose()
@@ -21,6 +21,6 @@ export class UserDto extends MongoDto {
 
 export class UserDtoFactory extends MongoFactory<User, UserDto> {
   constructor() {
-    super(UserDto)
+    super(User, UserDto);
   }
 }

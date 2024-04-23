@@ -1,10 +1,8 @@
 import { Injectable } from '@nestjs/common';
+import { Expose, Type } from 'class-transformer';
 import { MongoDto, MongoFactory } from 'nestjs-crudify-mongodb';
 import { Todo } from '../database/Todo.schema';
 import { UserDto } from '../users/users.dto';
-import {Expose, Type} from 'class-transformer';
-
-
 
 export class TodoDto extends MongoDto {
   @Expose()
@@ -26,6 +24,6 @@ export class TodoDto extends MongoDto {
 @Injectable()
 export class TodoFactory extends MongoFactory<Todo, TodoDto> {
   constructor() {
-    super(TodoDto)
+    super(Todo, TodoDto);
   }
 }
