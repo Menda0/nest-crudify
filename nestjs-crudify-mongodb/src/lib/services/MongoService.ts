@@ -86,7 +86,7 @@ export class MongoService<Entity, Dto extends MongoDto>
     return results.map((doc) => doc._id.toString());
   }
 
-  async create(data: Omit<Entity, '_id' | 'createdAt' | 'updatedAt'>) {
+  async create(data: any) {
     data = { ...data, id: undefined };
 
     const entity = await this.repository.create(data);
